@@ -1,0 +1,27 @@
+.mmmmmmm{
+    background-color: black;
+    height: ;
+}
+
+.rotalogo {
+    height: 250px;
+    animation-name: rotate-center;
+    animation-duration: 5s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+        
+    /* shorthand
+    animation: rotate-center 1s linear 0s infinite normal none;*/
+}
+@keyframes rotate-center {
+        
+    0% {
+        transform:rotate(0);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
+}
