@@ -23,7 +23,7 @@ export default function Loader() {
     isOpen={true}
     style={customStyles}
     >
-      <img src="./img/spinner_logo.png" alt="" className='rotalogo'  />
+      <img src="./img/spinner_logo.png" alt="" className='rotarLogoLoader'  />
     </Modal>
   )
 }

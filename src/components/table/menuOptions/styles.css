@@ -1,0 +1,26 @@
+.MainDiv-menuOptions {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.Sbutton-menuOptions {
+    position: relative;
+    margin: 0 10px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 25px;
+    color: green;
+  
+    &:hover{
+      color: rgb(251, 133, 0)
+    }
+  
+    &:hover span{
+      visibility: visible;
+      opacity: 1;
+      z-index: 1;
+    }
+}

@@ -1,0 +1,32 @@
+.Main-customPagination {
+    height: 40px;
+    display: flex;
+    padding: 8px;
+}
+
+
+.Sbutton-customPagination {
+    margin: 0 5px;
+    border: none;
+    
+    svg {
+        font-size: 21px;
+    }
+}
+
+
+.Sspan-customPagination {
+    margin: 0 5px;
+}
+
+.Sinput-customPagination {
+    border-radius: 5px;
+    padding-left: 5px;
+    margin-left: 5px;
+    width: 100px; 
+}
+
+.Sselect-customPagination {
+    width: 120px;
+    padding-left: 5px;
+}

@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux'
 import { DateTime } from "luxon"
-
+import { useNavigate } from "react-router-dom";
 import Loader from '../../components/loader/Loader'
 import useBirthday from '../../hooks/useBirthday'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function Dashboard() {
   const userSesion = useSelector((state) => state.reducerUserState.userState)
@@ -11,7 +12,14 @@ export default function Dashboard() {
     ? true 
     : false
   
-    const { query, showWeekMessagePic, showCakePic} = useBirthday()
+  const { query, showWeekMessagePic, showCakePic} = useBirthday()
+
+  const navigate = useNavigate()
+
+  const queryClient = useQueryClient()
+  const addNewRecord = () => {
+    queryClient.removeQueries({ queryKey:["cumple"]})
+  }
 
   return (
     <>
@@ -65,6 +73,7 @@ export default function Dashboard() {
         }
 
       </div>
+      <button onClick={()=> addNewRecord()}>ir</button>
     </div>
     }
     </>

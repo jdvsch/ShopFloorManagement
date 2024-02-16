@@ -1,9 +1,4 @@
-.mmmmmmm{
-    background-color: black;
-    height: ;
-}
-
-.rotalogo {
+.rotarLogoLoader {
     height: 250px;
     animation-name: rotate-center;
     animation-duration: 5s;
