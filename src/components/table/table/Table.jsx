@@ -11,7 +11,7 @@ export default function Table ({ table, meneOption }) {
   const dispatch = useDispatch()
   const editViewRecord = (cellData) => {
     if (cellData.column.id !== 'select') {
-      dispatch(setPageToRender({data: [cellData.row.original]}))
+      dispatch(setPageToRender({data: cellData.row.original}))
     }
 
   }

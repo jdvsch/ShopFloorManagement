@@ -2,10 +2,12 @@ import React from 'react'
 import "../styles.css";
 import { useSelector } from 'react-redux'
 import Loader from '../../loader/Loader';
+import { useQueryClient } from '@tanstack/react-query'
 
-export default function Error({query}) {
+export default function Error({query, onError}) {
   const [timer, setTimer] = React.useState("0%")
   const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender)
+  const queryClient = useQueryClient()
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -18,8 +20,8 @@ export default function Error({query}) {
   }
   
   const goBack = () => {
-    console.log('back');
-    
+    queryClient.removeQueries({ queryKey:[onError[1]]})
+    window.location.href=`/${onError[0]}`
   } 
 
   return (
@@ -28,8 +30,10 @@ export default function Error({query}) {
         <Loader/>
       }
 
-      {!query.isLoading || !query.isFetching &&
+      {(!query.isLoading || !query.isFetching) &&
         <div className="centerElementDiv">
+                <div>
+      </div>
           <div>
           {timer === "0%" && (
             <img
@@ -54,10 +58,9 @@ export default function Error({query}) {
               o vuelve a la página anterior y copialos en un lugar seguro
             </span> :
             <div className='mt-1' style={{width: '50%'}}>
-              <p>Algo salió mal, puedes:</p>
-              <p>salir de esta página, seleccionando cualquier opción del menu</p>
-              <p>intentar nuevamente el envío de los datos</p>
-              <p>volver a la página anterior y copiar la información en un lugar seguro</p>
+              <p>Algo salió mal,</p>
+              <p>{query.data.data.sqlMessage}</p>
+              <p>tome un pantallazo y lo envía al área de sistemas</p>
             </div>
           }
     
@@ -67,6 +70,7 @@ export default function Error({query}) {
           </div>
         </div>
       }
+
     </>
   );
 }

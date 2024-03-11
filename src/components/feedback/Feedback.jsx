@@ -1,18 +1,17 @@
 import Success from './success/Success';
 import Error from './error/Error';
 
-export default function Feedback({apiFeedback, query, addNewRecord}) {
-  console.log(apiFeedback);
-
-  if (apiFeedback.status === 200) {
+export default function Feedback({query, queryName, addNewRecord}) {
+  // console.log(query.data.data.sqlMessage);
+  if (query.data.data.sqlMessage === undefined) {
     return (
-      <Success />
+      <Success queryName={queryName}/>
     )
   }
 
-  if (apiFeedback.status !== 200) {
+  if (query.data.data.sqlMessage !== '') {
     return (
-      <Error query={query}/>
+      <Error query={query} onError={queryName}/>
     )
   }
 

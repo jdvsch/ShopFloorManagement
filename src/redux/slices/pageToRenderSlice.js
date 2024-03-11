@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  pageToRender: {page: '', data: [], listPageToRender: []},
+  pageToRender: {page: '', data: {}, submitData: {}, listPageToRender: []},
 }
 
 export const pageToRenderSlice = createSlice({

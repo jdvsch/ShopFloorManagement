@@ -39,7 +39,7 @@ export default function SingIn() {
     enabled: false,
     gcTime: 1000
   })
-console.log(isLoading, isFetching, data);
+
   React.useEffect(() => {
     if (data?.[0].id !== undefined) {
       const {id: id_user, firstName, lastName, email, birthday, timeOver, updatedAt} = data[0]

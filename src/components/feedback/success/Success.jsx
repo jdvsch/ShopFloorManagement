@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { setResetPageToRender } from '../../../redux/slices/pageToRenderSlice';
 import { useQueryClient } from '@tanstack/react-query'
 
-export default function Success() {
+export default function Success({queryName}) {
   const [timer, setTimer] = React.useState("0%")
   const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender)
   const dispatch = useDispatch()
@@ -20,11 +20,11 @@ export default function Success() {
   const queryClient = useQueryClient()
 
   const addNewRecord = () => {
-    queryClient.removeQueries({ queryKey:["createOC"]})
-    queryClient.removeQueries({ queryKey:["newOC"]})
-    const pageToGo = pageControl.page
+    for (let i = 0; i < queryName.length; i++) {
+      queryClient.removeQueries({ queryKey:[`${queryName[i]}`]})
+    }
     dispatch(setResetPageToRender())
-    navigate(`/${pageToGo}`)
+    navigate(`/${pageControl.page}`)
   }
   
   const goBack = () => {

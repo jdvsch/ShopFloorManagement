@@ -13,7 +13,7 @@ export default function NewPurchaseOrder() {
   const dispatch = useDispatch()
   const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender)
 
-  const { query } = Query({key: ['newOC'], url: GET_NEW_OC})
+  const { query } = Query({key: ['nuevaOC'], url: GET_NEW_OC, gcTime: 1000})
 
   React.useEffect(() => {
     pageControl.page !== 'nuevaOC' && dispatch(setPageToRender({page: 'nuevaOC', data: []}))
@@ -30,10 +30,9 @@ export default function NewPurchaseOrder() {
       }
       
       {pageControl.data.length !== 0 &&
-        <POForm  POdata={pageControl.data[0]} type='nuevaOC'/>
+        <POForm type='nuevaOC'/>
       }
 
     </div>
   )
 }
-

@@ -43,3 +43,5 @@ export const GET_NEW_OC = '/clienteyrefrenciaOC'
 export const POST_OC = '/ingresarOC';
 
 export const PUT_OC = '/editarOC/';
+
+export const GET_ALL_OC = '/buscarOC';

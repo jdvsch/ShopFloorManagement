@@ -14,7 +14,7 @@ const queryClient = new QueryClient({
       // refetchOnWindowFocus: false,
       // refetchOnReconnect: false,
       // staleTime: 0,
-      retry: 8,
+      //retry: 8,
       // gcTime: 100
     }
   }
@@ -26,7 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <PersistGate persistor={persistor}>
       <QueryClientProvider client={queryClient}>
         <App />
-                                                <ReactQueryDevtools initialIsOpen={true} />
+                                                <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
       </PersistGate>
     </Provider>
