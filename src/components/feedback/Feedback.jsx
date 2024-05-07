@@ -1,18 +1,24 @@
-import Success from './success/Success';
-import Error from './error/Error';
+import Success from "./success/Success";
+import Error from "./error/Error";
 
-export default function Feedback({query, queryName, addNewRecord}) {
-  // console.log(query.data.data.sqlMessage);
-  if (query.data.data.sqlMessage === undefined) {
+export default function Feedback({ mutationFeedback, setMutationFeedback }) {
+  if (mutationFeedback.success === "no") {
     return (
-      <Success queryName={queryName}/>
-    )
+      <Error
+        mutationFeedback={mutationFeedback}
+        setMutationFeedback={setMutationFeedback}
+      />
+    );
   }
 
-  if (query.data.data.sqlMessage !== '') {
+  if (mutationFeedback.success === "yes") {
     return (
-      <Error query={query} onError={queryName}/>
-    )
+      <Success
+        mutationFeedback={mutationFeedback}
+        setMutationFeedback={setMutationFeedback}
+      />
+    );
   }
 
+  return <>feedback</>;
 }

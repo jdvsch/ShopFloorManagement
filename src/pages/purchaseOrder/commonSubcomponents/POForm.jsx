@@ -1,108 +1,145 @@
 import React from "react";
-import { useQuery, useMutation } from '@tanstack/react-query'
-import axios from 'axios'
+import { useMutation } from "@tanstack/react-query";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./shema";
 import useTextareaCounter from "../../../hooks/useTextareaCounter";
 import { axiosInstance, POST_OC, PUT_OC } from "../../../config/api/api";
-import { Query } from "../../../config/api/api";
 import Feedback from "../../../components/feedback/Feedback";
 import Loader from "../../../components/loader/Loader";
-import { DateTime } from "luxon"
-import { useDispatch, useSelector } from 'react-redux'
-import { setPageToRender } from '../../../redux/slices/pageToRenderSlice';
+import { useSelector } from "react-redux";
 
 export default function POForm({ type }) {
-  const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender)
-  const dispatch = useDispatch()
-  const defaultValues = pageControl.data
+  const pageControl = useSelector(
+    (state) => state.reducerPageToRender.pageToRender
+  );
+  const [mutationFeedback, setMutationFeedback] = React.useState(false);
+  const defaultValues = { ...pageControl.data };
 
+  if (type === "editarOC") {
+    if (
+      defaultValues.fecha_requerida !== null &&
+      defaultValues.fecha_requerida.length > 10
+    ) {
+      defaultValues["fecha_requerida"] =
+        defaultValues.fecha_requerida.substring(0, 10);
+    }
+    if (defaultValues.fecha_oc !== null && defaultValues.fecha_oc.length > 10) {
+      defaultValues["fecha_oc"] = defaultValues.fecha_oc.substring(0, 10);
+    }
+    if (
+      defaultValues.fecha_real_entrega !== null &&
+      defaultValues.fecha_real_entrega.length > 10
+    ) {
+      defaultValues["fecha_real_entrega"] =
+        defaultValues.fecha_real_entrega.substring(0, 10);
+    }
+    if (
+      defaultValues.fecha_despacho !== null &&
+      defaultValues.fecha_despacho.length > 10
+    ) {
+      defaultValues["fecha_despacho"] = defaultValues.fecha_despacho.substring(
+        0,
+        10
+      );
+    }
+    if (
+      defaultValues.fecha_fabricacion !== null &&
+      defaultValues.fecha_fabricacion.length > 10
+    ) {
+      defaultValues["fecha_fabricacion"] =
+        defaultValues.fecha_fabricacion.substring(0, 10);
+    }
+  }
 
   const {
     register,
     handleSubmit,
-    formState:{ errors }, getValues
+    formState: { errors },
   } = useForm({
     defaultValues,
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
 
-  const TA = useTextareaCounter(defaultValues.nota ? defaultValues.nota.length : 0);
+  const TA = useTextareaCounter(
+    defaultValues.nota ? defaultValues.nota.length : 0
+  );
 
   const onSubmit = (formData) => {
-    const submitData = {...formData}
-    delete submitData.name
-    delete submitData.nombre
+    const submitData = { ...formData };
+    delete submitData.name;
+    delete submitData.nombre;
 
-    console.log(getValues());
+    if (type === "nuevaOC") {
+      submitData.fecha_oc =
+        new Date().getFullYear() +
+        "-" +
+        (new Date().getMonth() + 1) +
+        "-" +
+        new Date().getDate();
+      mutation.mutate([POST_OC, "post", submitData]);
+    }
 
-    dispatch(setPageToRender({data: formData, submitData}))
-    mutation.mutate()
-    // query.refetch(submitData)
+    if (type === "editarOC") {
+      delete submitData.statename;
+      mutation.mutate([
+        PUT_OC + defaultValues.id_purchaseorder,
+        "put",
+        submitData,
+      ]);
+    }
   };
 
   const mutation = useMutation({
-    mutationFn: async () => {
-      const data = await axios({
-        url: 'http://localhost:9010/api/ingresarOC',
-        method: "post",
-        data: pageControl.submitData,
-      }).catch(
-        err => {
-          console.log(err)
-        }
-      )
-      return data
+    mutationFn: async (SETUP) => {
+      const data = await axiosInstance({
+        url: SETUP[0],
+        method: SETUP[1],
+        data: SETUP[2],
+      }).catch(() => {
+        throw new Error("Un error a ocurrido");
+      });
+      return data;
     },
     enabled: false,
     onError: () => {
-      console.log("err")
+      setMutationFeedback({ success: "no", mutation });
     },
     onSuccess: () => {
-      console.log("bn")
+      if (type === "nuevaOC") {
+        setMutationFeedback({
+          success: "yes",
+          mutation,
+          queryName: ["nuevaOC"],
+          addNewRecord: true,
+        });
+      }
+
+      if (type === "editarOC") {
+        setMutationFeedback({
+          success: "yes",
+          mutation,
+          queryName: ["editarOC"],
+          addNewRecord: true,
+        });
+      }
     },
-  })
-
-
-  const  query = useQuery({
-    queryKey: ['prueba'],
-    queryFn: async () => {
-      const datas = await axios({
-        url: 'http://localhost:9010/api/ingresarOC',
-        method: "post",
-        data: pageControl.submitData,
-      }).catch(
-        err => {
-          console.log(err)
-        }
-      )
-      console.log('axios');
-      return datas
-    },
-    enabled: false
-  })
-
-  // console.log(query);
-  console.log(mutation.isError);
-  console.log(mutation.error);
-  console.log(mutation.failureCount);
-
-  const feedback = type === "nuevaOC"
-  ? { query, queryName: ['nuevaOC', "createOC"], addNewRecord: "yes" }
-  : { query, queryName: ['editarOC', "editOC"], addNewRecord: "yes" }
+  });
 
   return (
     <div>
-      {query.data && (
-        <Feedback {...feedback} />
+      {mutationFeedback && (
+        <Feedback
+          mutationFeedback={mutationFeedback}
+          setMutationFeedback={setMutationFeedback}
+        />
       )}
 
-      {query.isLoading || (query.isFetching && <Loader />)}
+      {mutation.isLoading || (mutation.isFetching && <Loader />)}
 
-      {query.data === undefined && (
+      {!mutationFeedback && (
         <>
           <h5 className="text-primary fw-bold text-center">
             {type === "nuevaOC"
@@ -143,7 +180,7 @@ export default function POForm({ type }) {
                   Fecha requerida
                 </label>
                 <input
-                  {...register("fecha_requerida")}
+                  {...register("fecha_requerida", { valueAsDate: true })}
                   type="date"
                   id="fecha_requerida"
                   className="form-control form-control-sm"
@@ -158,7 +195,7 @@ export default function POForm({ type }) {
                   Cantidad requerida (Kg)
                 </label>
                 <input
-                  {...register("monto_requerido", {valueAsNumber: true})}
+                  {...register("monto_requerido", { valueAsNumber: true })}
                   type="text"
                   id="monto_requerido"
                   className="form-control form-control-sm"
@@ -184,7 +221,7 @@ export default function POForm({ type }) {
                   Pedido (ofimática)
                 </label>
                 <input
-                  {...register("pedido", {valueAsNumber: true})}
+                  {...register("pedido", { valueAsNumber: true })}
                   type="text"
                   id="pedido"
                   className="form-control form-control-sm"
@@ -236,7 +273,7 @@ export default function POForm({ type }) {
                       Cantidad despachada
                     </label>
                     <input
-                      {...register("monto_despachado", {valueAsNumber: true})}
+                      {...register("monto_despachado", { valueAsNumber: true })}
                       type="text"
                       id="monto_despachado"
                       className="form-control form-control-sm"
@@ -309,7 +346,7 @@ export default function POForm({ type }) {
                     />
                   </div>
 
-                  {!POdata.fecha_fabricacion ? (
+                  {!defaultValues.fecha_fabricacion ? (
                     <div className="col-md-3">
                       <label htmlFor="statename" className="col-form-label">
                         Estado
@@ -346,7 +383,7 @@ export default function POForm({ type }) {
             <button
               className="btn btn-sm btn-success my-3"
               type="submit"
-              disabled={query.isLoading || query.isFetching}
+              disabled={mutation.isLoading || mutation.isFetching}
             >
               {type === "nuevaOC" ? "Ingresar OC" : "Actualizar OC"}
             </button>

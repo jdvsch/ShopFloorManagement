@@ -1,30 +1,31 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { persistStore, persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+import { configureStore } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-import userStateReducer from './slices/userStateSlice'
-import pageToRenderReducer from './slices/pageToRenderSlice'
+import userStateReducer from "./slices/userStateSlice";
+import pageToRenderReducer from "./slices/pageToRenderSlice";
 
 const persistData1 = {
-  key: 'US',
+  key: "US",
   storage,
-  whitelist: ['userState']
-}
+  whitelist: ["userState"],
+};
 
 const persistData2 = {
-  key: 'PR',
+  key: "PR",
   storage,
-  whitelist: ['pageToRender']
-}
+  whitelist: ["pageToRender"],
+};
 
 export const store = configureStore({
   reducer: {
     reducerUserState: persistReducer(persistData1, userStateReducer),
-    reducerPageToRender: persistReducer(persistData2, pageToRenderReducer)
+    reducerPageToRender: persistReducer(persistData2, pageToRenderReducer),
   },
-  middleware: (defaultMiddleware) => defaultMiddleware({
-    serializableCheck: false
-  })
-})
+  middleware: (defaultMiddleware) =>
+    defaultMiddleware({
+      serializableCheck: false,
+    }),
+});
 
-export const persistor = persistStore(store)
+export const persistor = persistStore(store);

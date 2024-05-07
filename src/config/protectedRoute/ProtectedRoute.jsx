@@ -1,10 +1,10 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = ({ isActivate }) => {
   if (!isActivate) {
-    return (<Navigate to={'/'} replace />)
+    return <Navigate to={"/"} replace />;
   }
-  return <Outlet />
-}
+  return <Outlet />;
+};
 
-export default ProtectedRoute
+export default ProtectedRoute;
