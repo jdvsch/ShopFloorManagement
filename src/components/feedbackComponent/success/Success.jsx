@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { setResetPageToRender } from "../../../redux/slices/pageToRenderSlice";
 // import { useQueryClient } from '@tanstack/react-query'
 
-export default function Success({ mutationFeedback, setMutationFeedback }) {
+export default function Success() {
   const [timer, setTimer] = React.useState("0%");
   const pageControl = useSelector(
     (state) => state.reducerPageToRender.pageToRender
@@ -40,7 +40,7 @@ export default function Success({ mutationFeedback, setMutationFeedback }) {
   };
 
   const goHome = () => {
-    setMutationFeedback();
+    // setMutationFeedback();
     navigate(`/dashboard`);
   };
 
@@ -77,14 +77,14 @@ export default function Success({ mutationFeedback, setMutationFeedback }) {
             <button className="btn btn-warning" onClick={() => goHome()}>
               Ir al inicio
             </button>
-            {mutationFeedback.addNewRecord && (
+            {/* {mutationFeedback.addNewRecord && (
               <button
                 className="btn btn-success"
                 onClick={() => addNewRecord()}
               >
                 Repetir acción
               </button>
-            )}
+            )} */}
           </div>
         )}
       </div>

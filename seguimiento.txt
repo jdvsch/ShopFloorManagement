@@ -1,0 +1,4 @@
+const query = useAskQuery({queryKey: ['test'], url: 'resinasbase', enabled: false})
+
+const mutation = useAskMutation({enabled: true, onError: function, onSuccess: function, onSettled: function})
+mutation.mutate({url: 'resinasbase', method: 'post', data: {}})

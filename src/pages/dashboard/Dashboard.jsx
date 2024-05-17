@@ -3,6 +3,10 @@ import { DateTime } from "luxon";
 import Loader from "../../components/loader/Loader";
 import useBirthday from "../../hooks/useBirthday";
 
+// import useAskQuery from "../../hooks/useAskQuery";
+// import { PUT_UPDATE_WO } from "../../config/api/api";
+// import useAskMutation from "../../hooks/useAskMutation";
+
 export default function Dashboard() {
   const userSesion = useSelector((state) => state.reducerUserState.userState);
 
@@ -15,6 +19,17 @@ export default function Dashboard() {
       : false;
 
   const { query, showWeekMessagePic, showCakePic } = useBirthday();
+
+  // const test = useAskQuery({queryKey: ['test'], url: 'resinasbase', enabled: false})
+  //console.log(test?.data);
+
+
+  // const onSuccess = () => {console.log('onSuccess');}
+  // const mutation = useAskMutation({onSuccess})
+
+  // const buttonTest = () => {
+  //   mutation.mutate({url: PUT_UPDATE_WO + 10, method: 'put', data: { id_states: 3 }})
+  // }
 
   return (
     <>
@@ -107,6 +122,7 @@ export default function Dashboard() {
                 }
               })}
           </div>
+          {/* <button onClick={buttonTest}>testing</button> */}
         </div>
       )}
     </>

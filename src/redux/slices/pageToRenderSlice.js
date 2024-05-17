@@ -1,7 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const develop = { id_productDevelopment: '', attemps: 1, paused: 0, scale: 100, base_resin: '', dosing: '', f_inicial: '', note: '', id_client: '', times: [] }
+
 const initialState = {
-  pageToRender: { page: "", data: {}, submitData: {}, listPageToRender: [] },
+  pageToRender: { 
+    page: "", 
+    data: {}, 
+    submitData: {}, 
+    listPageToRender: [], 
+    subpage:'', 
+    record: {}, 
+    starPoint: false,
+    development : develop,
+    modal: false,
+    devData: []
+  },
 };
 
 export const pageToRenderSlice = createSlice({
@@ -15,7 +28,7 @@ export const pageToRenderSlice = createSlice({
       state.pageToRender = { page: "", data: [] };
     },
     setResetTotalPageToRender: (state) => {
-      state.pageToRender = { page: "", data: [], listPageToRender: [] };
+      state.pageToRender = { page: "", data: {}, submitData: {}, listPageToRender: [], subpage:'', record: {}, starPoint: false, development : develop, modal: false, devData: [] };
     },
   },
 });

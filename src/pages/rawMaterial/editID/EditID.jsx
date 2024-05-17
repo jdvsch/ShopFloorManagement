@@ -8,21 +8,22 @@ import { columns } from "./tableColumns";
 import Loader from "../../../components/loader/Loader";
 import { setPageToRender } from "../../../redux/slices/pageToRenderSlice";
 
+import IDForm from "../commonSubcomponents/IDForm";
 
-export default function WatchID() {
+export default function EditID() {
   const dispatch = useDispatch();
   const pageControl = useSelector(
     (state) => state.reducerPageToRender.pageToRender
   );
 
   const query = Query({
-    key: ["Editar OT"],
+    key: ["Editar ID"],
     url: GET_WATCH_ID,
   });
 
   React.useEffect(() => {
-    pageControl.page !== "EditarOT" &&
-      dispatch(setPageToRender({ page: "EditarOT", data: [] }));
+    pageControl.page !== "editarID" &&
+      dispatch(setPageToRender({ page: "editarID", data: [] }));
   }, []);
     
   return (
@@ -33,7 +34,7 @@ export default function WatchID() {
         <TableInstance tableData={query.data} tableColumns={columns} />
       )}
 
-      {/* {pageControl.data.length !== 0 && <Worksheet type="Editar OT" />} */}
+      {pageControl.data.length !== 0 && <IDForm type={"Editar ID"}/>}
     </div>
   );
 }

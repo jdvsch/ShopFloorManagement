@@ -4,13 +4,12 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function Error({ mutationFeedback, setMutationFeedback }) {
+export default function Error() {
   const [timer, setTimer] = React.useState("0%");
   const pageControl = useSelector(
     (state) => state.reducerPageToRender.pageToRender
   );
-  const queryClient = useQueryClient();
-  const query = mutationFeedback.mutation;
+
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -24,13 +23,13 @@ export default function Error({ mutationFeedback, setMutationFeedback }) {
   };
 
   const goBack = () => {
-    setMutationFeedback(false);
+    // setMutationFeedback(false);
     // queryClient.removeQueries({ queryKey:[onError[1]]})
     // window.location.href=`/${onError[0]}`
   };
 
   const goHome = () => {
-    setMutationFeedback();
+    //setMutationFeedback();
     navigate(`/dashboard`);
   };
 

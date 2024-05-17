@@ -5,10 +5,11 @@ import { useSelector } from 'react-redux'
 import AdjustWO from './pages/workOrders/adjustWO/AdjustWO.jsx'
 import Home from './pages/home/Home'
 import ConsultWO from './pages/workOrders/consultWO/ConsultWO.jsx'
+import CreateFormulation from './pages/developments/createFormulation/CreateFormulation.jsx'
 import CreateID from './pages/rawMaterial/createID/CreateID.jsx'
 import CreatePC from './pages/clients/createPC/CreatePC.jsx'
 import Dashboard from './pages/dashboard/Dashboard.jsx'
-import EditID from './pages/rawMaterial/watchID/WatchID.jsx'
+import EditID from './pages/rawMaterial/editID/EditID.jsx'
 import EditClient from './pages/clients/editClient/EditClient.jsx'
 import EditPC from './pages/clients/editPC/EditPC.jsx'
 import EditPurchaseOrder from './pages/purchaseOrder/editPurchaseOrder/EditPurchaseOrder.jsx'
@@ -33,8 +34,15 @@ export default function App() {
     'nuevaOC', 'editarOC',
     'nuevoCP', 'editarCP','editarCliente',
     'nuevaOT', 'ajustarOT', 'optimizarOT', 'soloMuestra', 'repetirMuestra', 'reformulacion', 'consultarOT', 'editarOT',
-    'verID', 'crearID', 'editarID'
+    'verID', 'crearID', 'editarID',
+    'crearFormulacion', 'retomarFormulación', 'crearProducto', 'crearPI',
+    'crearMuestra', 'retomarMuestra',
+    'cancelarFormulacion', 'permitirEOT', 'editarProducto', 'editarPI', 'estadoSolicitud', 
+    'liberarOP', 'verOP', 'liberarOtros', 'verOtros',
+    'cambiarClave', 'crearUsurio', 'editarUsuario'
   ])
+
+  // const listPageToRender = JSON.parse(userSesion.listPageToRender)
 
   const ProtectedRouteOptions = {
     dashboard: <Route key={'dashboard'} path='/dashboard' element={<Dashboard />} />,
@@ -57,8 +65,9 @@ export default function App() {
 
     verID: <Route key={'verID'} path='/verID' element={<WatchID/>} />,
     crearID: <Route key={'crearID'} path='/crearID' element={<CreateID/>} />,
-    editarID: <Route key={''} path='/' element={<></>} />,
-    crearFormulacion: <Route key={''} path='/' element={<></>} />,
+    editarID: <Route key={'editarID'} path='/editarID' element={<EditID/>} />,
+
+    crearFormulacion: <Route key={'crearFormulacion'} path='/crearFormulacion' element={<CreateFormulation/>} />,
     retomarFormulación: <Route key={''} path='/' element={<></>} />,
     crearProducto: <Route key={''} path='/' element={<></>} />,
     crearPI: <Route key={''} path='/' element={<></>} />,

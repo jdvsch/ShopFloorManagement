@@ -7,11 +7,11 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 export const GET_ID = 'http://localhost:9010/api/verID/';
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:9010/api",
+  baseURL: "http://localhost:9010/api/",
 });
 
-export function Query(Props) {
-  const { key: queryKey, url, enabled = true } = Props;
+export function QueryDisabled(Props) {
+  const { key: queryKey, url } = Props;
   return useQuery({
     queryKey,
     queryFn: async () => {
@@ -22,14 +22,31 @@ export function Query(Props) {
       });
       return datas.data;
     },
+    enabled: false,
+    gcTime: 1000,
+  });
+}
+
+export function Query(Props) {
+  const { key: queryKey, url, enabled = true } = Props;
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      const datas = await axiosInstance({
+        url,
+      }).catch((err) => {
+        //console.log(err);
+      });
+      return datas.data;
+    },
     enabled,
     gcTime: 1000,
   });
 }
 
-export function Mutation(Props) {
-  console.log("mutate");
-  const { url, data, method } = Props;
+export function Mutation(url, data, method) {
+  //const { url, data, method } = Props;
+  console.log("mutate", url, data, method);
   return useMutation({
     mutationFn: async () => {
       const datas = await axiosInstance({
@@ -45,45 +62,47 @@ export function Mutation(Props) {
   });
 }
 
-export const POST_HISTORY = "/historyIntra";
+export const POST_HISTORY = "historyIntra";
 
-export const POST_LOGIN = "/login";
+export const POST_LOGIN = "login";
 
-export const GET_PRIVATE_NAVBAR = "/menu/";
+export const GET_USERMENU = "usermenu/";
 
-export const GET_BIRTHDAY = "/birthdays";
+export const GET_PRIVATE_NAVBAR = "menu/";
 
-export const GET_NEW_OC = "/clienteyrefrenciaOC";
+export const GET_BIRTHDAY = "birthdays";
 
-export const POST_OC = "/ingresarOC";
+export const GET_NEW_OC = "clienteyrefrenciaOC";
 
-export const PUT_OC = "/editarOC/";
+export const POST_OC = "ingresarOC";
 
-export const GET_ALL_OC = "/buscarOC";
+export const PUT_OC = "editarOC/";
 
-export const GET_ZONA = "/zona";
+export const GET_ALL_OC = "buscarOC";
 
-export const POST_NEW_PC = "/nuevoCP";
+export const GET_ZONA = "zona";
 
-export const GET_ALL_CLIENTS = "/clientes/";
+export const POST_NEW_PC = "nuevoCP";
 
-export const PUT_CLIENTS = "/editarCliente/";
+export const GET_ALL_CLIENTS = "clientes/";
+
+export const PUT_CLIENTS = "editarCliente/";
 
 export const GET_CLIENTS_BY_SELLER = "nuevaOT/";
 
-export const GET_NORMATIVE = "/normative";
+export const GET_NORMATIVE = "normative";
 
-export const GET_PORDUCT_TYPE = "/producttype";
+export const GET_PORDUCT_TYPE = "producttype";
 
-export const POST_NEW_WO = "/nuevaOT";
+export const POST_NEW_WO = "nuevaOT";
 
 export const PUT_UPDATE_WO = "actualizarOT/";
 
-export const GET_AJUST_WO = "/ajustarOT/";
+export const GET_AJUST_WO = "ajustarOT/";
 
-export const GET_SM_RM_R_OT = '/sm_rm_rOT/';
+export const GET_SM_RM_R_OT = 'sm_rm_rOT/';
 
-export const GET_REFORMULATION = '/reformulacionOT';
+export const GET_REFORMULATION = 'reformulacionOT';
 
 export const GET_CONSULT_WO = 'estadoOT/';
 
@@ -99,6 +118,21 @@ export const GET_ID_INFO = 'verID/';
 
 export const POST_CREATE_ID = 'crearID';
 
+export const PUT_UPDATE_ID = 'actualizarID/';
 
+export const GET_DEVELOPMENT_OW = 'verOT';
 
+export const GET_FORMULA_CUSTOMER = 'formulaycliente/';
+
+export const POST_PRODUCT_DEVELOPMENT = 'nuevoPD';
+
+export const GET_RESINS = 'resinasbase';
+
+export const GET_CLEANING_TIMES = 'verTL/';
+
+export const POST_ATTEMPT_TIME = 'ingresarTiempoIntento';
+
+export const POST_ATTEMPT = 'ingresarIntento';
+
+export const PUT_UPDATE_DEVELOPMENT = 'actualizarPD/';
 

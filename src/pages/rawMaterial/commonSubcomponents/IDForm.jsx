@@ -11,7 +11,8 @@ import {
   GET_ID_NORMATIVE,
   GET_ID_TYPE,
   GET_ID,
-  POST_CREATE_ID
+  POST_CREATE_ID,
+  PUT_UPDATE_ID
 } from "../../../config/api/api";
 import Feedback from "../../../components/feedback/Feedback";
 import Loader from "../../../components/loader/Loader";
@@ -28,7 +29,7 @@ export default function IDForm({type}) {
 
   let defaultValues;
 
-  if (type === "Ver ID") {
+  if (type === "Ver ID" || type === "Editar ID") {
     defaultValues = { ...pageControl.data };
   }
 
@@ -81,10 +82,15 @@ export default function IDForm({type}) {
 
   const onSubmit = (formData) => {
     const submitData = { ...formData };
-
+    
     if (type === "Crear ID") {
       const newdata = {...submitData, name: `${'ID' + submitData.id}`}
       mutation.mutate([POST_CREATE_ID, "post", newdata]);
+    }
+
+    if (type === "Editar ID") {
+      const ID = submitData.id
+      mutation.mutate([PUT_UPDATE_ID + ID, "put", submitData]);
     }
     
   };
@@ -111,6 +117,15 @@ export default function IDForm({type}) {
           mutation,
           queryName: [],
           addNewRecord: false,
+        });
+      }
+
+      if (type === "Editar ID") {
+        setMutationFeedback({
+          success: "yes",
+          mutation,
+          queryName: ["Editar ID"],
+          addNewRecord: true,
         });
       }
 

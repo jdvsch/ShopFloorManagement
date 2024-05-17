@@ -1,16 +1,30 @@
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { setResetUserState } from "../../../redux/slices/userStateSlice";
 import { setResetPageToRender, setResetTotalPageToRender } from '../../../redux/slices/pageToRenderSlice';
+import { setUserState } from "../../../redux/slices/userStateSlice";
+import { Query, GET_USERMENU } from "../../../config/api/api";
+
+import { menu } from "../../../fakeAPI/login";
 
 export default function PrivateNavbar() {
-  const menu = useSelector((state) => state.reducerUserState.userState.menu);
+  const user = useSelector((state) => state.reducerUserState.userState.id_user);
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
+  const menuUserData = Query({key: ['menu'], url: GET_USERMENU + user})
+
+  React.useEffect(() => {
+    if (menuUserData.data) {
+      dispatch(setUserState({menu: menuUserData.data[0].menu, listPageToRender: menuUserData.data[0].listPageToRender}))
+      console.log(JSON.parse(menuUserData.data[0].listPageToRender));
+    }
+  }, [])
+
   const goToPage = (data) => {
-    dispatch(setResetPageToRender())
+    dispatch(setResetTotalPageToRender())
     navigate(data);
   }
 

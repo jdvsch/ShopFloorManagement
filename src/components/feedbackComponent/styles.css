@@ -1,0 +1,48 @@
+.successFecthDataLogo {
+    height: 200px; 
+    animation-name: flip-vertical-logo;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+        
+    /* shorthand
+    animation: flip-vertical 1s linear 0s 1 normal forwards;*/
+}
+@keyframes flip-vertical-logo {
+			
+    0% {
+        transform:rotateY(180deg);
+    }
+    100% {
+        transform:rotateY(270deg);
+    }
+}
+
+.successFecthDataCheck {
+    height: 200px; 
+    animation-name: flip-vertical-check;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+}
+@keyframes flip-vertical-check {
+        
+    0% {
+        transform:rotateY(270deg);
+    }
+    100% {
+        transform:rotateY(360deg);
+    }
+}
+
+.centerElementDiv {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}

@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
 import { flexRender } from '@tanstack/react-table'
@@ -9,11 +9,19 @@ import "./styles.css"
 
 export default function Table ({ table, meneOption }) {
   const dispatch = useDispatch()
+  const pageControl = useSelector(
+    (state) => state.reducerPageToRender.pageToRender
+  );
   const editViewRecord = (cellData) => {
-    if (cellData.column.id !== 'select') {
-      dispatch(setPageToRender({data: cellData.row.original}))
+    if (pageControl.subpage === 'Historial') {
+      return dispatch(setPageToRender({record: cellData.row.original}))
     }
 
+    if (cellData.column.id !== 'select' && (pageControl.page === 'crearFormulacion' || pageControl.page === 'crearFormulacion')) {
+      return dispatch(setPageToRender({data: cellData.row.original, subpage: 'Ver OT', development: {...pageControl.development, f_inicial: new Date()}}))
+    } else {
+      return dispatch(setPageToRender({data: cellData.row.original}))
+    }
   }
 
   const height = meneOption ? '77vh' : '82vh'

@@ -10,6 +10,7 @@ const initialState = {
     birthday: "",
     timeOver: "",
     menu: [],
+    listPageToRender: []
   },
 };
 
@@ -30,6 +31,7 @@ export const userStateSlice = createSlice({
         birthday: "",
         timeOver: "",
         menu: [],
+        listPageToRender: []
       };
     },
   },
