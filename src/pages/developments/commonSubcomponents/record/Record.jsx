@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPageToRender } from '../../../../redux/slices/pageToRenderSlice';
 import { GET_FORMULA_CUSTOMER, axiosInstance } from '../../../../config/api/api';
 import { useQuery } from "@tanstack/react-query";
+import useAskQuery from '../../../../hooks/useAskQuery';
 
 import Table from './table/Table'
 
@@ -16,19 +17,21 @@ export default function Record() {
   const existRecord = Object.keys(pageControl.record).length
   const [startingPoint, setStartingPoint] = React.useState(existRecord === 0 ? true : false)
 
-  const query = useQuery({
-    queryKey: ['id'],
-    queryFn: async () => {
-      const datas = await axiosInstance({
-        url: GET_FORMULA_CUSTOMER + pageControl.record.id_clients,
-      }).catch((err) => {
-        console.log(err);
-      });
-      return datas.data;
-    },
-    enabled: false,
-    gcTime: 1000,
-  });
+  // const query = useQuery({
+  //   queryKey: ['id'],
+  //   queryFn: async () => {
+  //     const datas = await axiosInstance({
+  //       url: GET_FORMULA_CUSTOMER + pageControl.record.id_clients,
+  //     }).catch((err) => {
+  //       console.log(err);
+  //     });
+  //     return datas.data;
+  //   },
+  //   enabled: false,
+  //   gcTime: 1000,
+  // });
+
+  const query = useAskQuery({queryKey: ['id'], url: GET_FORMULA_CUSTOMER + pageControl.record.id_clients, enabled: false})
 
   React.useEffect(() => {
     if (existRecord !== 0) {

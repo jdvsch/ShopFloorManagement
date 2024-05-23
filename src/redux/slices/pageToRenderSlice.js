@@ -5,7 +5,7 @@ const develop = { id_productDevelopment: '', attemps: 1, paused: 0, scale: 100, 
 const initialState = {
   pageToRender: { 
     page: "", 
-    data: {}, 
+    data: [], 
     submitData: {}, 
     listPageToRender: [], 
     subpage:'', 
@@ -28,7 +28,7 @@ export const pageToRenderSlice = createSlice({
       state.pageToRender = { page: "", data: [] };
     },
     setResetTotalPageToRender: (state) => {
-      state.pageToRender = { page: "", data: {}, submitData: {}, listPageToRender: [], subpage:'', record: {}, starPoint: false, development : develop, modal: false, devData: [] };
+      state.pageToRender = { page: "", data: [], submitData: {}, listPageToRender: [], subpage:'', record: {}, starPoint: false, development : develop, modal: false, devData: [] };
     },
   },
 });

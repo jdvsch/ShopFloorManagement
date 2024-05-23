@@ -1,9 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:9010/api/",
-});
+import { axiosInstance } from '../config/api/api';
 
 export default function useAskQuery({queryKey, url, enabled = true}) {
   return useQuery({
@@ -22,4 +18,5 @@ export default function useAskQuery({queryKey, url, enabled = true}) {
 }
 
 // se llama asi:
-// const query = useAskQuery({queryKey: ['test'], url: 'resinasbase', enabled: false})
+// const query = useAskQuery({queryKey: ['test'], url: GET, enabled: false})
+// const query = useAskQuery({queryKey: ['test'], url: GET})

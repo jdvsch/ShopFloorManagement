@@ -2,7 +2,8 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { Query, GET_NEW_OC } from "../../../config/api/api";
+import { GET_NEW_OC } from "../../../config/api/api";
+import useAskQuery from "../../../hooks/useAskQuery";
 import TableInstance from "../../../components/table/TableInstance";
 import { columns } from "./tableColumns";
 import Loader from "../../../components/loader/Loader";
@@ -15,7 +16,7 @@ export default function NewPurchaseOrder() {
     (state) => state.reducerPageToRender.pageToRender
   );
 
-  const query = Query({ key: ["nuevaOC"], url: GET_NEW_OC });
+  const query = useAskQuery({queryKey: ['nuevaOC'], url: GET_NEW_OC})
 
   React.useEffect(() => {
     pageControl.page !== "nuevaOC" &&

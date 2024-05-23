@@ -2,65 +2,11 @@
 // server use http://192.168.1.12:9000/api/login;
 
 import axios from "axios";
-import { useQuery, useMutation } from "@tanstack/react-query";
-
-export const GET_ID = 'http://localhost:9010/api/verID/';
 
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:9010/api/",
 });
 
-export function QueryDisabled(Props) {
-  const { key: queryKey, url } = Props;
-  return useQuery({
-    queryKey,
-    queryFn: async () => {
-      const datas = await axiosInstance({
-        url,
-      }).catch((err) => {
-        console.log(err);
-      });
-      return datas.data;
-    },
-    enabled: false,
-    gcTime: 1000,
-  });
-}
-
-export function Query(Props) {
-  const { key: queryKey, url, enabled = true } = Props;
-  return useQuery({
-    queryKey,
-    queryFn: async () => {
-      const datas = await axiosInstance({
-        url,
-      }).catch((err) => {
-        //console.log(err);
-      });
-      return datas.data;
-    },
-    enabled,
-    gcTime: 1000,
-  });
-}
-
-export function Mutation(url, data, method) {
-  //const { url, data, method } = Props;
-  console.log("mutate", url, data, method);
-  return useMutation({
-    mutationFn: async () => {
-      const datas = await axiosInstance({
-        url,
-        method,
-        data,
-      }).catch((err) => {
-        console.log(err);
-      });
-      return datas;
-    },
-    enabled: false,
-  });
-}
 
 export const POST_HISTORY = "historyIntra";
 

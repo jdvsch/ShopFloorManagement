@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setFeedback, setResetFeedback } from "../../redux/slices/feedbackSlice";
+import { setResetFeedback } from "../../redux/slices/feedbackSlice";
 
 import Success from "./success/Success";
 import Error from "./error/Error";
@@ -16,13 +16,13 @@ export default function FeedbackComponent({children}) {
     dispatch(setResetFeedback())
   }
 
-  if (feedback.success === "no") {
+  if (!feedback.success && feedback.children.length === 0) {
     return (
       <Error/>
     );
   }
 
-  if (feedback.success === "yes") {
+  if (feedback.success && feedback.children.length === 0) {
     return (
       <Success/>
     );

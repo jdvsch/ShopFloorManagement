@@ -2,12 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   feedback: {
+    addNewRecord: false,
     itShows: false,
     showLogo: true,
     data: [],
     mutation: {},
     success: false,
-    goto: '',
+    queryName: [],
     development: false,
     children: []
   },
@@ -22,12 +23,13 @@ export const feedbackSlice = createSlice({
     },
     setResetFeedback: (state) => {
       state.feedback = {
+        addNewRecord: false,
         itShows: false,
         showLogo: true,
         data: [],
         mutation: {},
         success: false,
-        goto: '',
+        queryName: [],
         development: false,
         children: []
       };

@@ -1,17 +1,11 @@
 import {useMutation} from '@tanstack/react-query'
-import axios from "axios";
-
-const axiosInstance = axios.create({
-    baseURL: "http://localhost:9010/api/",
-  });
-
-const emptyFunction = () => {}
+import { axiosInstance } from '../config/api/api';
 
 export default function useAskMutation({ 
     enabled = false,
-    onError = emptyFunction, 
-    onSuccess = emptyFunction,
-    onSettled = emptyFunction
+    onError = () => {}, 
+    onSuccess = () => {},
+    onSettled = () => {}
 }) {
   return useMutation({
     mutationFn: async ({url, method, data}) => {
@@ -33,4 +27,5 @@ export default function useAskMutation({
 
 // se llama asi:
 // const mutation = useAskMutation({enabled: true, onError: function, onSuccess: function, onSettled: function})
-// mutation.mutate({url: 'resinasbase', method: 'post', data: {}})
+// const mutation = useAskMutation({onError: function, onSuccess: function})
+// mutation.mutate({url: POST, method: 'post', data: {}})

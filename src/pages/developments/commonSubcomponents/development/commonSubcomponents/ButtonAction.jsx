@@ -3,18 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPageToRender } from "../../../../../redux/slices/pageToRenderSlice";
 import { setFeedback } from "../../../../../redux/slices/feedbackSlice";
 import {
-  axiosInstance,
   POST_ATTEMPT_TIME,
   POST_ATTEMPT,
   PUT_UPDATE_DEVELOPMENT,
 } from "../../../../../config/api/api";
-import { useMutation } from "@tanstack/react-query";
+import useAskMutation from "../../../../../hooks/useAskMutation";
 
 import FeedbackComponent from "../../../../../components/feedbackComponent/FeedbackComponent";
 import Feedback from "../../../../../components/feedback/Feedback";
 import Loader from "../../../../../components/loader/Loader";
-
-import useAskMutation from "../../../../../hooks/useAskMutation";
 
 export default function ButtonAction() {
   const dispatch = useDispatch();
@@ -24,7 +21,11 @@ export default function ButtonAction() {
   const [mutationFeedback, setMutationFeedback] = React.useState(false);
   const [feedbackComponent, setfeedbackComponent] = React.useState(false);
 
-  
+  const onError = () => {}
+  const onSuccess = () => {}
+
+  const mutation = useAskMutation({onError, onSuccess})
+
   const checkingInputs = (accion) => {
     let alerta = [];
 
@@ -82,29 +83,28 @@ export default function ButtonAction() {
     return alerta;
   };
 
-  const mutations = useAskMutation({url: 'resinasbase', method: 'post', data: {}})
-
-
   const handleNewTry = () => {
-    mutations.mutate()
     const alerta = checkingInputs("NewTry");
     if (alerta.length !== 0) {
       return dispatch(setFeedback({ itShows: true, children: alerta }));
     }
 
-    mutation.mutate([POST_ATTEMPT_TIME, "post", { 
-      id_developmentrequest: pageControl.data.id_developmentrequest, 
-      attemps: pageControl.development.attemps, 
-      f_inicial: pageControl.development.f_inicial, 
-      f_final: new Date() 
-    }]);
+    // mutation.mutate([POST_ATTEMPT_TIME, "post", { 
+    //   id_developmentrequest: pageControl.data.id_developmentrequest, 
+    //   attemps: pageControl.development.attemps, 
+    //   f_inicial: pageControl.development.f_inicial, 
+    //   f_final: new Date() 
+    // }]);
 
-    mutation.mutate([POST_ATTEMPT, "post", { 
-      id_developmentrequest: pageControl.data.id_developmentrequest, 
-      attemps: pageControl.development.attemps, 
-      f_inicial: pageControl.development.f_inicial, 
-      f_final: new Date() 
-    }]);
+    // mutation.mutate([POST_ATTEMPT, "post", { 
+    //   id_developmentrequest: pageControl.data.id_developmentrequest, 
+    //   attemps: pageControl.development.attemps, 
+    //   f_inicial: pageControl.development.f_inicial, 
+    //   f_final: new Date() 
+    // }]);
+
+    // mutation.mutate({url: POST, method: 'post', data: {}})
+    // mutation.mutate({url: POST, method: 'post', data: {}})
 
     // if (alerta.length === 0) {
     //   //array with all data to POST and PUT
@@ -145,56 +145,6 @@ export default function ButtonAction() {
     //   setFeedbackError(alerta);
     // }
   };
-
-  const onSubmit = (formData) => {
-    // const submitData = { ...formData };
-    // delete submitData.name;
-    // delete submitData.nombre;
-    // if (type === "nuevaOC") {
-    //   submitData.fecha_oc =
-    //     new Date().getFullYear() +
-    //     "-" +
-    //     (new Date().getMonth() + 1) +
-    //     "-" +
-    //     new Date().getDate();
-    //   mutation.mutate([POST_OC, "post", submitData]);
-    // }
-    // if (type === "editarOC") {
-    //   delete submitData.statename;
-    //   mutation.mutate([
-    //     PUT_OC + defaultValues.id_purchaseorder,
-    //     "put",
-    //     submitData,
-    //   ]);
-    // }
-  };
-
-  const mutation = useMutation({
-    mutationFn: async (SETUP) => {
-      const data = await axiosInstance({
-        url: SETUP[0],
-        method: SETUP[1],
-        data: SETUP[2],
-      }).catch(() => {
-        throw new Error("Un error a ocurrido");
-      });
-      return data;
-    },
-    enabled: false,
-    onError: () => {
-      setMutationFeedback({ success: "no", mutation });
-    },
-    onSuccess: () => {
-      // if (false) {
-      //   setMutationFeedback({
-      //     success: "yes",
-      //     mutation,
-      //     queryName: ["editarOC"],
-      //     addNewRecord: true,
-      //   });
-      // }
-    },
-  });
 
   return (
     <>

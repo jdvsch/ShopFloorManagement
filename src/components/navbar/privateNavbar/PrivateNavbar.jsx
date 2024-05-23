@@ -4,8 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { setResetUserState } from "../../../redux/slices/userStateSlice";
 import { setResetPageToRender, setResetTotalPageToRender } from '../../../redux/slices/pageToRenderSlice';
+import { setResetFeedback } from "../../../redux/slices/feedbackSlice";
 import { setUserState } from "../../../redux/slices/userStateSlice";
-import { Query, GET_USERMENU } from "../../../config/api/api";
+import { GET_USERMENU } from "../../../config/api/api";
+import useAskQuery from "../../../hooks/useAskQuery";
 
 import { menu } from "../../../fakeAPI/login";
 
@@ -14,7 +16,7 @@ export default function PrivateNavbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
-  const menuUserData = Query({key: ['menu'], url: GET_USERMENU + user})
+  const menuUserData = useAskQuery({queryKey: ['menu'], url: GET_USERMENU + user})
 
   React.useEffect(() => {
     if (menuUserData.data) {
@@ -25,11 +27,13 @@ export default function PrivateNavbar() {
 
   const goToPage = (data) => {
     dispatch(setResetTotalPageToRender())
+    dispatch(setResetFeedback())
     navigate(data);
   }
 
   const handleLogout = () => {
     dispatch(setResetUserState());
+    dispatch(setResetFeedback())
     dispatch(setResetTotalPageToRender());
   };
 

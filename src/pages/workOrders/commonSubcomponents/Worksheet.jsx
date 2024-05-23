@@ -1,28 +1,26 @@
-import React from "react";
-import { useMutation } from "@tanstack/react-query";
-
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { NewAjust, Other } from "./shema";
 import useTextareaCounter from "../../../hooks/useTextareaCounter";
 import {
-  axiosInstance,
-  Query,
   GET_NORMATIVE,
   GET_PORDUCT_TYPE,
   POST_NEW_WO,
   PUT_UPDATE_WO,
 } from "../../../config/api/api";
-import Feedback from "../../../components/feedback/Feedback";
+import useAskMutation from "../../../hooks/useAskMutation";
+import useAskQuery from "../../../hooks/useAskQuery";
+import FeedbackComponent from "../../../components/feedbackComponent/FeedbackComponent";
 import Loader from "../../../components/loader/Loader";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setFeedback } from "../../../redux/slices/feedbackSlice";
 
 export default function Worksheet({ type }) {
-  const pageControl = useSelector(
-    (state) => state.reducerPageToRender.pageToRender
-  );
+  const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
   const userState = useSelector((state) => state.reducerUserState.userState);
-  const [mutationFeedback, setMutationFeedback] = React.useState(false);
+  const feedback = useSelector((state) => state.reducerFeedback.feedback)
+  const dispatch = useDispatch()
+
   const addData = {
     cant_muestra: 0,
     tiempo_ciclo: 0,
@@ -112,8 +110,46 @@ export default function Worksheet({ type }) {
     schema = Other;
   }
 
-  const normative = Query({ key: ["normative"], url: GET_NORMATIVE });
-  const productType = Query({ key: ["productType"], url: GET_PORDUCT_TYPE });
+  const normative = useAskQuery({queryKey: ['normative'], url: GET_NORMATIVE})
+  const productType = useAskQuery({queryKey: ['productType'], url: GET_PORDUCT_TYPE})
+
+  const onError = () => {
+    dispatch(setFeedback({...feedback, itShows: true, success: false}))
+  }
+
+  const onSuccess = () => {
+    if (type === "Nueva OT") {
+      const newState = {itShows: true, success: true, addNewRecord: true, queryName: ['Nueva OT']}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+
+    if (type === "Ajustar OT") {
+      const newState = {itShows: true, success: true, addNewRecord: true, queryName: ['Ajustar OT']}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+
+    if (type === "Optimizar OT") {
+      const newState = {itShows: true, success: true, addNewRecord: true, queryName: ['Optimizar OT']}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+
+    if (type === "Muestra") {
+      const newState = {itShows: true, success: true, addNewRecord: true, queryName: ['Muestra']}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+
+    if (type === "Repetir muestra") {
+      const newState = {itShows: true, success: true, addNewRecord: true, queryName: ['Repetir muestra']}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+
+    if (type === "Reformulacion") {
+      const newState = {itShows: true, success: true, addNewRecord: true, queryName: ['Reformulacion']}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+  }
+
+  const mutation = useAskMutation({onError, onSuccess})
 
   if (type === "editarOC") {
     /* empty */
@@ -168,103 +204,29 @@ export default function Worksheet({ type }) {
     delete submitData.name;
 
     if (type === "Nueva OT" || type === "Optimizar OT" || type === "Muestra" || type === "Repetir muestra" || type === "Reformulacion") {
-      mutation.mutate([POST_NEW_WO, "post", submitData]);
+      mutation.mutate({url: POST_NEW_WO, method: 'post', data: submitData})
     }
 
     if (type === "Ajustar OT") {
       submitData.ajuste_num = submitData.ajuste_num + 1;
       const id = submitData.dllo_padre;
       delete submitData.dllo_padre;
-      mutation.mutate([PUT_UPDATE_WO + id, "put", { id_states: 5 }]);
-      mutation.mutate([POST_NEW_WO, "post", submitData]);
+
+      mutation.mutate({url: PUT_UPDATE_WO + id, method: 'put', data: { id_states: 5 }})
+      mutation.mutate({url: POST_NEW_WO, method: 'put', data: submitData})
     }
     
   };
 
-  const mutation = useMutation({
-    mutationFn: async (SETUP) => {
-      const data = await axiosInstance({
-        url: SETUP[0],
-        method: SETUP[1],
-        data: SETUP[2],
-      }).catch(() => {
-        throw new Error("Un error a ocurrido");
-      });
-      return data;
-    },
-    enabled: false,
-    onError: () => {
-      setMutationFeedback({ success: "no", mutation });
-    },
-    onSuccess: () => {
-      if (type === "Nueva OT") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: ["Nueva OT"],
-          addNewRecord: true,
-        });
-      }
-
-      if (type === "Ajustar OT") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: ["Ajustar OT"],
-          addNewRecord: true,
-        });
-      }
-
-      if (type === "Optimizar OT") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: ["Optimizar OT"],
-          addNewRecord: true,
-        });
-      }
-
-      if (type === "Muestra") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: ["Muestra"],
-          addNewRecord: true,
-        });
-      }
-
-      if (type === "Repetir muestra") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: ["Repetir muestra"],
-          addNewRecord: true,
-        });
-      }
-
-      if (type === "Reformulacion") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: ["Reformulacion"],
-          addNewRecord: true,
-        });
-      }
-    },
-  });
-
   return (
     <>
-      {mutationFeedback && (
-        <Feedback
-          mutationFeedback={mutationFeedback}
-          setMutationFeedback={setMutationFeedback}
-        />
-      )}
+      {feedback.itShows &&
+        <FeedbackComponent></FeedbackComponent>
+      }
 
       {mutation.isLoading || (mutation.isFetching && <Loader />)}
 
-      {!mutationFeedback && normative.data && productType.data && (
+      {!feedback.itShows && normative.data && productType.data && (
         <div className="container">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="row border border-4 my-2">

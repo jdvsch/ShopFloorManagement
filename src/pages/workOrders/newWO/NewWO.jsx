@@ -2,7 +2,8 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { Query, GET_CLIENTS_BY_SELLER } from "../../../config/api/api";
+import { GET_CLIENTS_BY_SELLER } from "../../../config/api/api";
+import useAskQuery from "../../../hooks/useAskQuery";
 import TableInstance from "../../../components/table/TableInstance";
 import { columns } from "./tableColumns";
 import Loader from "../../../components/loader/Loader";
@@ -16,10 +17,7 @@ export default function NewWO() {
   );
   const userState = useSelector((state) => state.reducerUserState.userState);
 
-  const query = Query({
-    key: ["Nueva OT"],
-    url: GET_CLIENTS_BY_SELLER + userState.id_user,
-  });
+  const query = useAskQuery({queryKey: ['Nueva OT'], url: GET_CLIENTS_BY_SELLER + userState.id_user})
 
   React.useEffect(() => {
     pageControl.page !== "NuevaOT" &&

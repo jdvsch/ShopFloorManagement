@@ -1,20 +1,20 @@
-import React from "react";
-import { useMutation } from "@tanstack/react-query";
+import useAskMutation from "../../../hooks/useAskMutation";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./shema";
 import useTextareaCounter from "../../../hooks/useTextareaCounter";
-import { axiosInstance, POST_OC, PUT_OC } from "../../../config/api/api";
-import Feedback from "../../../components/feedback/Feedback";
+import { POST_OC, PUT_OC } from "../../../config/api/api";
+import FeedbackComponent from "../../../components/feedbackComponent/FeedbackComponent";
 import Loader from "../../../components/loader/Loader";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setFeedback } from "../../../redux/slices/feedbackSlice";
 
 export default function POForm({ type }) {
-  const pageControl = useSelector(
-    (state) => state.reducerPageToRender.pageToRender
-  );
-  const [mutationFeedback, setMutationFeedback] = React.useState(false);
+  const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
+  const feedback = useSelector((state) => state.reducerFeedback.feedback)
+  const dispatch = useDispatch()
+
   const defaultValues = { ...pageControl.data };
 
   if (type === "editarOC") {
@@ -67,6 +67,24 @@ export default function POForm({ type }) {
     defaultValues.nota ? defaultValues.nota.length : 0
   );
 
+  const onError = () => {
+    dispatch(setFeedback({...feedback, itShows: true, success: false}))
+  }
+
+  const onSuccess = () => {
+    if (type === "nuevaOC") {
+      const newState = {itShows: true, success: true, addNewRecord: true, queryName: ['nuevaOC']}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+
+    if (type === "editarOC") {
+      const newState = {itShows: true, success: true, addNewRecord: true, queryName: ['editarOC']}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+  }
+
+  const mutation = useAskMutation({onError, onSuccess})
+
   const onSubmit = (formData) => {
     const submitData = { ...formData };
     delete submitData.name;
@@ -79,67 +97,27 @@ export default function POForm({ type }) {
         (new Date().getMonth() + 1) +
         "-" +
         new Date().getDate();
-      mutation.mutate([POST_OC, "post", submitData]);
+
+      mutation.mutate({url: POST_OC, method: 'post', data: submitData})
     }
 
     if (type === "editarOC") {
       delete submitData.statename;
-      mutation.mutate([
-        PUT_OC + defaultValues.id_purchaseorder,
-        "put",
-        submitData,
-      ]);
+
+      mutation.mutate({url: PUT_OC + defaultValues.id_purchaseorder, method: 'put', data: submitData})
     }
   };
 
-  const mutation = useMutation({
-    mutationFn: async (SETUP) => {
-      const data = await axiosInstance({
-        url: SETUP[0],
-        method: SETUP[1],
-        data: SETUP[2],
-      }).catch(() => {
-        throw new Error("Un error a ocurrido");
-      });
-      return data;
-    },
-    enabled: false,
-    onError: () => {
-      setMutationFeedback({ success: "no", mutation });
-    },
-    onSuccess: () => {
-      if (type === "nuevaOC") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: ["nuevaOC"],
-          addNewRecord: true,
-        });
-      }
-
-      if (type === "editarOC") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: ["editarOC"],
-          addNewRecord: true,
-        });
-      }
-    },
-  });
 
   return (
     <div>
-      {mutationFeedback && (
-        <Feedback
-          mutationFeedback={mutationFeedback}
-          setMutationFeedback={setMutationFeedback}
-        />
-      )}
+      {feedback.itShows &&
+        <FeedbackComponent></FeedbackComponent>
+      }
 
       {mutation.isLoading || (mutation.isFetching && <Loader />)}
 
-      {!mutationFeedback && (
+      {!feedback.itShows && (
         <>
           <h5 className="text-primary fw-bold text-center">
             {type === "nuevaOC"

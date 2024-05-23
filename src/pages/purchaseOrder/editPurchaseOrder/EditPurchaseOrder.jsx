@@ -2,7 +2,8 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { Query, GET_ALL_OC } from "../../../config/api/api";
+import { GET_ALL_OC } from "../../../config/api/api";
+import useAskQuery from "../../../hooks/useAskQuery";
 import TableInstance from "../../../components/table/TableInstance";
 import { columns } from "./tableColumns";
 import Loader from "../../../components/loader/Loader";
@@ -15,7 +16,7 @@ export default function EditPurchaseOrder() {
     (state) => state.reducerPageToRender.pageToRender
   );
 
-  const query = Query({ key: ["editarOC"], url: GET_ALL_OC });
+  const query = useAskQuery({queryKey: ['editarOC'], url: GET_ALL_OC})
 
   React.useEffect(() => {
     pageControl.page !== "editarOC" &&
@@ -28,7 +29,7 @@ export default function EditPurchaseOrder() {
 
       {query.data && pageControl.data.length === 0 && (
         <TableInstance tableData={query.data} tableColumns={columns} />
-      )}
+      )} 
 
       {pageControl.data.length !== 0 && <POForm type="editarOC" />}
     </div>

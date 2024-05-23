@@ -2,7 +2,8 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { Query, GET_ALL_CLIENTS } from "../../../config/api/api";
+import { GET_ALL_CLIENTS } from "../../../config/api/api";
+import useAskQuery from "../../../hooks/useAskQuery";
 import TableInstance from "../../../components/table/TableInstance";
 import { columns } from "./tableColumns";
 import Loader from "../../../components/loader/Loader";
@@ -16,10 +17,7 @@ export default function EditClient() {
   );
   const userState = useSelector((state) => state.reducerUserState.userState);
 
-  const query = Query({
-    key: ["editarCliente"],
-    url: GET_ALL_CLIENTS + userState.id_user + "/N",
-  });
+  const query = useAskQuery({queryKey: ['editarCliente'], url: GET_ALL_CLIENTS + userState.id_user + "/N"})
 
   React.useEffect(() => {
     pageControl.page !== "editarCliente" &&

@@ -1,14 +1,14 @@
 import React from "react";
 import "../styles.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import { setResetFeedback, setFeedback } from "../../../redux/slices/feedbackSlice";
 
 export default function Error() {
   const [timer, setTimer] = React.useState("0%");
-  const pageControl = useSelector(
-    (state) => state.reducerPageToRender.pageToRender
-  );
+  const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
+  const feedback = useSelector((state) => state.reducerFeedback.feedback)
+  const dispatch = useDispatch()
 
   const navigate = useNavigate();
 
@@ -18,18 +18,12 @@ export default function Error() {
     }, 1000);
   }, []);
 
-  const tryFecthAgain = () => {
-    // query.refetch();
-  };
-
   const goBack = () => {
-    // setMutationFeedback(false);
-    // queryClient.removeQueries({ queryKey:[onError[1]]})
-    // window.location.href=`/${onError[0]}`
+    dispatch(setFeedback({...feedback, itShows: false}));
   };
 
   const goHome = () => {
-    //setMutationFeedback();
+    dispatch(setResetFeedback());
     navigate(`/dashboard`);
   };
 
@@ -63,7 +57,7 @@ export default function Error() {
         <div className="mt-1" style={{ width: "50%" }}>
           <p>
             Los datos ingresados no se han perdido, puedes volver a la página
-            anterior e inentartloy volver a intertar guardar los datos o y
+            anterior y volver a intertar guardar los datos o 
             copialos en un lugar seguro.
           </p>
         </div>

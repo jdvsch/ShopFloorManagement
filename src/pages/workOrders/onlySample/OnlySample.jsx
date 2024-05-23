@@ -2,7 +2,8 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { Query, GET_SM_RM_R_OT } from "../../../config/api/api";
+import { GET_SM_RM_R_OT } from "../../../config/api/api";
+import useAskQuery from "../../../hooks/useAskQuery";
 import TableInstance from "../../../components/table/TableInstance";
 import { columns } from "./tableColumns";
 import Loader from "../../../components/loader/Loader";
@@ -16,10 +17,7 @@ export default function OnlySample() {
   );
   const userState = useSelector((state) => state.reducerUserState.userState);
 
-  const query = Query({
-    key: ["Muestra"],
-    url: GET_SM_RM_R_OT + userState.id_user,
-  });
+  const query = useAskQuery({queryKey: ['Muestra'], url: GET_SM_RM_R_OT + userState.id_user})
 
   React.useEffect(() => {
     pageControl.page !== "Muestra" &&

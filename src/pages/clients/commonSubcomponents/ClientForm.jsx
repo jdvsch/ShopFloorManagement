@@ -1,29 +1,46 @@
-import React from "react";
-import { useMutation } from "@tanstack/react-query";
-
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addData, updateData } from "./shema";
 import {
-  axiosInstance,
-  Query,
   GET_ZONA,
   POST_NEW_PC,
   PUT_CLIENTS,
 } from "../../../config/api/api";
-import Feedback from "../../../components/feedback/Feedback";
+import useAskMutation from "../../../hooks/useAskMutation";
+import useAskQuery from "../../../hooks/useAskQuery";
 import Loader from "../../../components/loader/Loader";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setFeedback } from "../../../redux/slices/feedbackSlice";
+
+import FeedbackComponent from "../../../components/feedbackComponent/FeedbackComponent";
 
 export default function ClientForm({ type }) {
-  const pageControl = useSelector(
-    (state) => state.reducerPageToRender.pageToRender
-  );
+  const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
   const userState = useSelector((state) => state.reducerUserState.userState);
-  const [mutationFeedback, setMutationFeedback] = React.useState(false);
+  const feedback = useSelector((state) => state.reducerFeedback.feedback)
+  const dispatch = useDispatch()
+
   const defaultValues = { ...pageControl.data };
 
-  const query = Query({ key: ["zona"], url: GET_ZONA });
+  const query = useAskQuery({queryKey: ['zona'], url: GET_ZONA})
+
+  const onError = () => {
+    dispatch(setFeedback({...feedback, itShows: true, success: false}))
+  }
+
+  const onSuccess = () => {
+    if (type === "NewPC") {
+      const newState = {itShows: true, success: true}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+
+    if (type !== "NewPC") {
+      const newState = {itShows: true, success: true}
+      dispatch(setFeedback({...feedback, ...newState }))
+    }
+  }
+
+  const mutation = useAskMutation({onError, onSuccess})
 
   const {
     register,
@@ -42,67 +59,26 @@ export default function ClientForm({ type }) {
         id_user: userState.id_user,
         is_potentialclient: "Y",
       };
-      mutation.mutate([POST_NEW_PC, "post", submitData]);
+
+      mutation.mutate({url: POST_NEW_PC, method: 'post', data: submitData})
     }
 
     if (type !== "NewPC") {
       const submitData = { ...formData };
-      mutation.mutate([
-        PUT_CLIENTS + pageControl.data.id_clients,
-        "put",
-        submitData,
-      ]);
+
+      mutation.mutate({url: PUT_CLIENTS + pageControl.data.id_clients, method: 'put', data: submitData})
     }
   };
 
-  const mutation = useMutation({
-    mutationFn: async (SETUP) => {
-      const data = await axiosInstance({
-        url: SETUP[0],
-        method: SETUP[1],
-        data: SETUP[2],
-      }).catch(() => {
-        throw new Error("Un error a ocurrido");
-      });
-      return data;
-    },
-    enabled: false,
-    onError: () => {
-      setMutationFeedback({ success: "no", mutation });
-    },
-    onSuccess: () => {
-      if (type === "NewPC") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: [],
-          addNewRecord: false,
-        });
-      }
-
-      if (type !== "NewPC") {
-        setMutationFeedback({
-          success: "yes",
-          mutation,
-          queryName: [],
-          addNewRecord: false,
-        });
-      }
-    },
-  });
-
   return (
     <>
-      {mutationFeedback && (
-        <Feedback
-          mutationFeedback={mutationFeedback}
-          setMutationFeedback={setMutationFeedback}
-        />
-      )}
+      {feedback.itShows &&
+        <FeedbackComponent></FeedbackComponent>
+      }
 
       {mutation.isLoading || (mutation.isFetching && <Loader />)}
 
-      {!mutationFeedback && query.data && (
+      {!feedback.itShows && query.data && (
         <div className="container">
           <h2 className="text-primary fw-bold text-center">
             {type === "NewPC"

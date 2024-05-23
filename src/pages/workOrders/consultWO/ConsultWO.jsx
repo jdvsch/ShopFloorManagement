@@ -2,7 +2,8 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { Query, GET_CONSULT_WO } from "../../../config/api/api";
+import { GET_CONSULT_WO } from "../../../config/api/api";
+import useAskQuery from "../../../hooks/useAskQuery";
 import TableInstance from "../../../components/table/TableInstance";
 import { columns } from "./tableColumns";
 import Loader from "../../../components/loader/Loader";
@@ -16,10 +17,7 @@ export default function ConsultWO() {
   );
   const userState = useSelector((state) => state.reducerUserState.userState);
 
-  const query = Query({
-    key: ["Muestra"],
-    url: GET_CONSULT_WO + userState.id_user,
-  });
+  const query = useAskQuery({queryKey: ['Muestra'], url: GET_CONSULT_WO + userState.id_user})
 
   React.useEffect(() => {
     pageControl.page !== "Muestra" &&

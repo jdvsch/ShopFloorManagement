@@ -2,7 +2,8 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { Query, GET_WATCH_ID } from "../../../config/api/api";
+import { GET_WATCH_ID } from "../../../config/api/api";
+import useAskQuery from "../../../hooks/useAskQuery";
 import TableInstance from "../../../components/table/TableInstance";
 import { columns } from "./tableColumns";
 import Loader from "../../../components/loader/Loader";
@@ -16,10 +17,7 @@ export default function WatchID() {
     (state) => state.reducerPageToRender.pageToRender
   );
 
-  const query = Query({
-    key: ["Ver ID"],
-    url: GET_WATCH_ID,
-  });
+  const query = useAskQuery({queryKey: ['Ver ID'], url: GET_WATCH_ID})
 
   React.useEffect(() => {
     pageControl.page !== "verID" &&

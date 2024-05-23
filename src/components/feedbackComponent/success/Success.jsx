@@ -3,13 +3,13 @@ import "../styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setResetPageToRender } from "../../../redux/slices/pageToRenderSlice";
-// import { useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
+import { setResetFeedback, setFeedback } from "../../../redux/slices/feedbackSlice";
 
 export default function Success() {
   const [timer, setTimer] = React.useState("0%");
-  const pageControl = useSelector(
-    (state) => state.reducerPageToRender.pageToRender
-  );
+  const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
+  const feedback = useSelector((state) => state.reducerFeedback.feedback)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,28 +19,26 @@ export default function Success() {
     }, 1000);
   }, []);
 
-  // const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
 
   const addNewRecord = () => {
-    // const queryName = mutationFeedback.queryName
-    // for (let i = 0; i < queryName.length; i++) {
-    //   queryClient.removeQueries({ queryKey:[`${queryName[i]}`]})
-    // }
+    const queryName = feedback.queryName
+    for (let i = 0; i < queryName.length; i++) {
+      queryClient.removeQueries({ queryKey:[`${queryName[i]}`]})
+    }
 
     const goto = pageControl.page;
-    console.log(goto);
-
-    // setMutationFeedback(false)
+    dispatch(setResetFeedback());
     dispatch(setResetPageToRender());
     navigate(`/${goto}`);
   };
 
   const goBack = () => {
-    // setMutationFeedback();
+    dispatch(setFeedback({...feedback, itShows: false}));
   };
 
   const goHome = () => {
-    // setMutationFeedback();
+    dispatch(setResetFeedback());
     navigate(`/dashboard`);
   };
 
@@ -77,14 +75,14 @@ export default function Success() {
             <button className="btn btn-warning" onClick={() => goHome()}>
               Ir al inicio
             </button>
-            {/* {mutationFeedback.addNewRecord && (
+            {feedback.addNewRecord && (
               <button
                 className="btn btn-success"
                 onClick={() => addNewRecord()}
               >
                 Repetir acción
               </button>
-            )} */}
+            )}
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
 import React from "react";
-import { Query, GET_RESINS } from "../../../../../config/api/api";
+import { GET_RESINS } from "../../../../../config/api/api";
+import useAskQuery from "../../../../../hooks/useAskQuery";
 import { useDispatch, useSelector } from "react-redux";
 import { setPageToRender } from "../../../../../redux/slices/pageToRenderSlice";
 import useTextareaCounter from "../../../../../hooks/useTextareaCounter";
@@ -15,7 +16,8 @@ export default function Resins() {
   const textarea1 = useTextareaCounter(
     pageControl.development.note ? pageControl.development.note.length : 0
   );
-  const resins = Query({ key: ["resinas"], url: GET_RESINS });
+
+  const resins = useAskQuery({queryKey: ['resinas'], url: GET_RESINS})
 
   const handleDosing = (e) => {
     const value = e.target.value.replace(/,/g, ".").trim();
