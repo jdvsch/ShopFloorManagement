@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 
+import Aproved from "../aproved/Aproved";
 import ButtonAction from './commonSubcomponents/ButtonAction'
 import Scale from './commonSubcomponents/Scale'
 import Table from './commonSubcomponents/Table'
@@ -13,7 +14,11 @@ export default function Development() {
   return (
     <>
     {feedback.itShows &&
-    <FeedbackComponent></FeedbackComponent>
+    <FeedbackComponent>
+      {feedback.success === undefined &&
+      <Aproved/>
+      }
+    </FeedbackComponent>
     }
 
     {!feedback.itShows &&

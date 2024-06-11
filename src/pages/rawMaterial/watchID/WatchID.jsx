@@ -22,6 +22,7 @@ export default function WatchID() {
   React.useEffect(() => {
     pageControl.page !== "verID" &&
       dispatch(setPageToRender({ page: "verID", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
     
   return (

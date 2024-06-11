@@ -22,6 +22,7 @@ export default function EditClient() {
   React.useEffect(() => {
     pageControl.page !== "editarCliente" &&
       dispatch(setPageToRender({ page: "editarCliente", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -3,16 +3,23 @@ import React from "react";
 import { DateTime } from "luxon";
 import { useDispatch, useSelector } from "react-redux";
 import { setPageToRender } from "../../../../../redux/slices/pageToRenderSlice";
+import useAskMutation from "../../../../../hooks/useAskMutation";
+import { POST_CLEANING_TIME } from "../../../../../config/api/api";
 
 export default function Times() {
   const dispatch = useDispatch();
-  const pageControl = useSelector(
-    (state) => state.reducerPageToRender.pageToRender
-  );
+  const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
+
 
   const f_inicial = React.useRef("");
   const f_final = React.useRef("");
   const dateError = React.useRef("");
+
+  const onError = () => {
+    // dispatch(setFeedback({...feedback, itShows: true, success: false}))
+  }
+
+  const mutation = useAskMutation({onError})
 
   const handleTiempo = () => {
     if (
@@ -27,6 +34,14 @@ export default function Times() {
       var times = pageControl.development.times.slice();
 
       times.push({ f_inicial: f_inicial.current.value, f_final: f_final.current.value });
+
+      const submitData = {
+        id_productdevelopment: pageControl.data.id_developmentrequest, 
+        f_inicial: f_inicial.current.value, 
+        f_final: f_final.current.value
+      }
+
+      mutation.mutate({url: POST_CLEANING_TIME, method: 'post', data: submitData})
 
       dispatch(
         setPageToRender({

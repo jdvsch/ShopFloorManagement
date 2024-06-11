@@ -8,6 +8,7 @@ import ConsultWO from './pages/workOrders/consultWO/ConsultWO.jsx'
 import CreateFormulation from './pages/developments/createFormulation/CreateFormulation.jsx'
 import CreateID from './pages/rawMaterial/createID/CreateID.jsx'
 import CreatePC from './pages/clients/createPC/CreatePC.jsx'
+import CreateProduct from './pages/developments/createProduct/CreateProduct.jsx'
 import Dashboard from './pages/dashboard/Dashboard.jsx'
 import EditID from './pages/rawMaterial/editID/EditID.jsx'
 import EditClient from './pages/clients/editClient/EditClient.jsx'
@@ -24,6 +25,7 @@ import ProtectedRoute from './config/protectedRoute/ProtectedRoute.jsx'
 import PublicNavbar from './components/navbar/publicNavbar/PublicNavbar.jsx'
 import Reformulation from './pages/workOrders/reformulation/Reformulation.jsx'
 import RepeatSample from './pages/workOrders/repeatSample/RepeatSample.jsx'
+import ResurneFormulation from './pages/developments/resurneFormulation/ResurneFormulation.jsx'
 import WatchID from './pages/rawMaterial/watchID/WatchID.jsx'
 
 export default function App() {
@@ -68,9 +70,10 @@ export default function App() {
     editarID: <Route key={'editarID'} path='/editarID' element={<EditID/>} />,
 
     crearFormulacion: <Route key={'crearFormulacion'} path='/crearFormulacion' element={<CreateFormulation/>} />,
-    retomarFormulación: <Route key={''} path='/' element={<></>} />,
-    crearProducto: <Route key={''} path='/' element={<></>} />,
+    retomarFormulación: <Route key={'retomarFormulación'} path='/retomarFormulación' element={<ResurneFormulation/>} />,
+    crearProducto: <Route key={'crearProducto'} path='/crearProducto' element={<CreateProduct/>} />,
     crearPI: <Route key={''} path='/' element={<></>} />,
+    
     crearMuestra: <Route key={''} path='/' element={<></>} />,
     retomarMuestra: <Route key={''} path='/' element={<></>} />,
     cancelarFormulacion: <Route key={''} path='/' element={<></>} />,

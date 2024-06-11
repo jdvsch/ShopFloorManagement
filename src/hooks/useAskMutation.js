@@ -14,7 +14,7 @@ export default function useAskMutation({
         method,
         data,
       }).catch(() => {
-        throw new Error(['err', "Un error a ocurrido"]);
+        throw new Error(['err', "Un error ha ocurrido"]);
       });
       return info;
     },
@@ -29,3 +29,25 @@ export default function useAskMutation({
 // const mutation = useAskMutation({enabled: true, onError: function, onSuccess: function, onSettled: function})
 // const mutation = useAskMutation({onError: function, onSuccess: function})
 // mutation.mutate({url: POST, method: 'post', data: {}})
+
+
+export function useMultipleMutation({ 
+  enabled = false,
+  onError = () => {}, 
+  onSuccess = () => {},
+  onSettled = () => {}
+}) {
+return useMutation({
+  mutationFn: async ({data}) => {
+    const info = await Promise.all(data)
+    .catch(() => {
+      throw new Error(['err', "Un error ha ocurrido"]);
+    });
+    return info;
+  },
+  enabled,
+  onError,
+  onSuccess,
+  onSettled
+});
+}

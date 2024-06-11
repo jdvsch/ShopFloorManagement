@@ -22,6 +22,7 @@ export default function RepeatSample() {
   React.useEffect(() => {
     pageControl.page !== "repetirMuestra" &&
       dispatch(setPageToRender({ page: "repetirMuestra", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
     
   return (

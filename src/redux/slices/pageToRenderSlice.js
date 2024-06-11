@@ -7,7 +7,7 @@ const initialState = {
     page: "", 
     data: [], 
     submitData: {}, 
-    listPageToRender: [], 
+    developmentStatus: '', 
     subpage:'', 
     record: {}, 
     starPoint: false,
@@ -28,7 +28,7 @@ export const pageToRenderSlice = createSlice({
       state.pageToRender = { page: "", data: [] };
     },
     setResetTotalPageToRender: (state) => {
-      state.pageToRender = { page: "", data: [], submitData: {}, listPageToRender: [], subpage:'', record: {}, starPoint: false, development : develop, modal: false, devData: [] };
+      state.pageToRender = { page: "", data: [], submitData: {}, developmentStatus: '', subpage:'', record: {}, starPoint: false, development : develop, modal: false, devData: [] };
     },
   },
 });

@@ -22,6 +22,7 @@ export default function OptimizeWO() {
   React.useEffect(() => {
     pageControl.page !== "OptimizarOT" &&
       dispatch(setPageToRender({ page: "OptimizarOT", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
     
   return (

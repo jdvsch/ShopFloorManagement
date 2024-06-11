@@ -4,6 +4,7 @@ import { setResetFeedback } from "../../redux/slices/feedbackSlice";
 import Success from "./success/Success";
 import Error from "./error/Error";
 
+// eslint-disable-next-line react/prop-types
 export default function FeedbackComponent({children}) {
   const dispatch = useDispatch();
   const feedback = useSelector(
@@ -16,7 +17,7 @@ export default function FeedbackComponent({children}) {
     dispatch(setResetFeedback())
   }
 
-  if (!feedback.success && feedback.children.length === 0) {
+  if (feedback.success === false && feedback.children.length === 0) {
     return (
       <Error/>
     );
@@ -29,10 +30,10 @@ export default function FeedbackComponent({children}) {
   }
 
   return (  
-    <div className="container mt-5">
+    <div className="container mt-5 text-center">
       { childrenToShow }
 
-      <button type="button" className="btn btn-primary" onClick={closeFeedback}>Cerrar</button>
+      <button type="button" className="mt-3 btn btn-primary" onClick={closeFeedback}>volver atras</button>
     </div>
   )
 }

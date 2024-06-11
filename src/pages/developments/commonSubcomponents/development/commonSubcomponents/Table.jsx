@@ -36,7 +36,7 @@ export default function Table() {
       add +=  +pageControl.devData[i].percentage*1000
     }
 
-    array[pageControl.devData.length -1].percentage = 100 - add/1000;
+    array[pageControl.devData.length -1].percentage = (100000 - add)/1000;
     dispatch(setPageToRender({devData: array}))
   }
 
@@ -50,12 +50,13 @@ export default function Table() {
       add +=  +pageControl.devData[i].percentage*1000
     }
     dispatch(setPageToRender({development: {...pageControl.development, sum: add/1000}}))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[pageControl.devData])
 
   return (
     <div>
       <h4 className="fw-bold text-primary">
-        Intento # {pageControl?.attemps || 1}
+        Intento # {pageControl.development.attemps || 1}
       </h4>
       <table className="table table-hover">
         <thead>

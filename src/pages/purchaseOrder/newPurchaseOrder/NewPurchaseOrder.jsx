@@ -21,6 +21,7 @@ export default function NewPurchaseOrder() {
   React.useEffect(() => {
     pageControl.page !== "nuevaOC" &&
       dispatch(setPageToRender({ page: "nuevaOC", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

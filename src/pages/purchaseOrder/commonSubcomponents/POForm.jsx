@@ -10,6 +10,7 @@ import Loader from "../../../components/loader/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { setFeedback } from "../../../redux/slices/feedbackSlice";
 
+// eslint-disable-next-line react/prop-types
 export default function POForm({ type }) {
   const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
   const feedback = useSelector((state) => state.reducerFeedback.feedback)

@@ -21,6 +21,7 @@ export default function EditPurchaseOrder() {
   React.useEffect(() => {
     pageControl.page !== "editarOC" &&
       dispatch(setPageToRender({ page: "editarOC", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

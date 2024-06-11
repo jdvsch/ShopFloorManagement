@@ -12,6 +12,7 @@ import MenuOptions from './menuOptions/MenuOptions'
 import Pagination from './pagination/Pagination'
 import Table from './table/Table'
 
+// eslint-disable-next-line react/prop-types
 export default function TableInstance ({ tableData, tableColumns, meneOption = false }) {
   const columns = React.useMemo(() => tableColumns, [tableColumns])
   const data = React.useMemo(() => tableData, [tableData])

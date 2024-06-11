@@ -22,6 +22,7 @@ export default function EditID() {
   React.useEffect(() => {
     pageControl.page !== "editarID" &&
       dispatch(setPageToRender({ page: "editarID", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
     
   return (

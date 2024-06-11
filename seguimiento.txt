@@ -1,4 +1,10 @@
-const query = useAskQuery({queryKey: ['test'], url: 'resinasbase', enabled: false})
-
-const mutation = useAskMutation({enabled: true, onError: function, onSuccess: function, onSettled: function})
-mutation.mutate({url: 'resinasbase', method: 'post', data: {}})
+borrar todo lo del desarrollo
+TRUNCATE TABLE `attempttime` ;
+TRUNCATE TABLE `cleaningtime` ;
+UPDATE `developmentrequest` SET `id_states` = '1' WHERE `developmentrequest`.`id_developmentrequest` = 1;
+TRUNCATE TABLE `pdattempt` ;
+TRUNCATE TABLE `productdevelopment` ;
+DELETE FROM `products` WHERE `products`.`id` >= 3;
+ALTER TABLE products AUTO_INCREMENT = 3;
+DELETE FROM `productmaterials` WHERE `productmaterials`.`id` >= 15;
+ALTER TABLE productmaterials AUTO_INCREMENT = 15;

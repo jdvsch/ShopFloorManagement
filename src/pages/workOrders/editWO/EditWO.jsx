@@ -22,6 +22,7 @@ export default function EditWO() {
   React.useEffect(() => {
     pageControl.page !== "EditarOT" &&
       dispatch(setPageToRender({ page: "EditarOT", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
     
   return (

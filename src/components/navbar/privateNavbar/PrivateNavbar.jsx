@@ -21,7 +21,7 @@ export default function PrivateNavbar() {
   React.useEffect(() => {
     if (menuUserData.data) {
       dispatch(setUserState({menu: menuUserData.data[0].menu, listPageToRender: menuUserData.data[0].listPageToRender}))
-      console.log(JSON.parse(menuUserData.data[0].listPageToRender));
+      // console.log(JSON.parse(menuUserData.data[0].listPageToRender));
     }
   }, [])
 

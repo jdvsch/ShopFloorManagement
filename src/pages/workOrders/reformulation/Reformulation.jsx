@@ -21,6 +21,7 @@ export default function Reformulation() {
   React.useEffect(() => {
     pageControl.page !== "reformulacion" &&
       dispatch(setPageToRender({ page: "reformulacion", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
     
   return (

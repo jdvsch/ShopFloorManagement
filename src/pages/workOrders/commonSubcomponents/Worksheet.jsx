@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { NewAjust, Other } from "./shema";
@@ -15,6 +16,7 @@ import Loader from "../../../components/loader/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { setFeedback } from "../../../redux/slices/feedbackSlice";
 
+// eslint-disable-next-line react/prop-types
 export default function Worksheet({ type }) {
   const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
   const userState = useSelector((state) => state.reducerUserState.userState);
@@ -159,6 +161,7 @@ export default function Worksheet({ type }) {
     register,
     handleSubmit,
     watch,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues,
@@ -273,7 +276,11 @@ export default function Worksheet({ type }) {
                 <input
                   readOnly
                   {...register("f_ingreso")}
-                  defaultValue={new Date()}
+                  value={
+                    DateTime.fromISO(getValues("f_ingreso"))
+                    .setLocale("sp")
+                    .toLocaleString(DateTime.DATE_FULL)
+                  }
                   type="text"
                   id="f_ingreso"
                   className="form-control col"
@@ -312,7 +319,7 @@ export default function Worksheet({ type }) {
                   <input
                     readOnly
                     {...register("tecnico")}
-                    defaultValue={
+                    value={
                       userState.firstName + " " + userState.lastName
                     }
                     type="text"

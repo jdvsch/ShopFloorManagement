@@ -14,6 +14,7 @@ import { setFeedback } from "../../../redux/slices/feedbackSlice";
 
 import FeedbackComponent from "../../../components/feedbackComponent/FeedbackComponent";
 
+// eslint-disable-next-line react/prop-types
 export default function ClientForm({ type }) {
   const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
   const userState = useSelector((state) => state.reducerUserState.userState);

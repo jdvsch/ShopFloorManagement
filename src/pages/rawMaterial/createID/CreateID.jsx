@@ -15,6 +15,7 @@ export default function CreateID() {
   React.useEffect(() => {
     pageControl.page !== "crearID" &&
       dispatch(setPageToRender({ page: "crearID", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
     
   return (

@@ -22,6 +22,7 @@ export default function OnlySample() {
   React.useEffect(() => {
     pageControl.page !== "Muestra" &&
       dispatch(setPageToRender({ page: "soloMuestra", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
     
   return (

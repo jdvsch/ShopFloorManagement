@@ -1,30 +1,21 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPageToRender } from "../../../../../redux/slices/pageToRenderSlice";
 import { setFeedback } from "../../../../../redux/slices/feedbackSlice";
 import {
+  axiosInstance,
   POST_ATTEMPT_TIME,
   POST_ATTEMPT,
   PUT_UPDATE_DEVELOPMENT,
 } from "../../../../../config/api/api";
 import useAskMutation from "../../../../../hooks/useAskMutation";
-
-import FeedbackComponent from "../../../../../components/feedbackComponent/FeedbackComponent";
-import Feedback from "../../../../../components/feedback/Feedback";
+import { useMultipleMutation } from "../../../../../hooks/useAskMutation";
 import Loader from "../../../../../components/loader/Loader";
 
 export default function ButtonAction() {
   const dispatch = useDispatch();
-  const pageControl = useSelector(
-    (state) => state.reducerPageToRender.pageToRender
-  );
-  const [mutationFeedback, setMutationFeedback] = React.useState(false);
-  const [feedbackComponent, setfeedbackComponent] = React.useState(false);
-
-  const onError = () => {}
-  const onSuccess = () => {}
-
-  const mutation = useAskMutation({onError, onSuccess})
+  const user = useSelector((state) => state.reducerUserState.userState.id_user);
+  const pageControl = useSelector((state) => state.reducerPageToRender.pageToRender);
+  const feedback = useSelector((state) => state.reducerFeedback.feedback)
 
   const checkingInputs = (accion) => {
     let alerta = [];
@@ -34,7 +25,7 @@ export default function ButtonAction() {
       pageControl.development.base_resin === ""
     ) {
       alerta.push(
-        <p>
+        <p key={1}>
           Por favor diligecie la resina base del submenu:{" "}
           <strong>Varios</strong>
         </p>
@@ -43,7 +34,7 @@ export default function ButtonAction() {
 
     if (accion === "Aproved" && pageControl.development.dosing === "") {
       alerta.push(
-        <p>
+        <p key={2}>
           Por favor diligecie la dosificacción del submenu:{" "}
           <strong>Varios</strong>
         </p>
@@ -52,13 +43,13 @@ export default function ButtonAction() {
 
     if (pageControl.development.scale === "") {
       alerta.push(
-        <p>Por favor coloque un valor en la escala de trabajo (%)</p>
+        <p key={3}>Por favor coloque un valor en la escala de trabajo (%)</p>
       );
     }
 
     if (pageControl.development.sum !== 100) {
       alerta.push(
-        <p>
+        <p key={4}>
           La suma de los porcentajes es diferente de <strong>100%</strong>
         </p>
       );
@@ -67,14 +58,14 @@ export default function ButtonAction() {
     for (let i = 0; i < pageControl.devData.length; i++) {
       if (pageControl.devData[i]["materialId"] === "") {
         alerta.push(
-          <p>
+          <p key={'A'+i.toString()}>
             Verifique el valor del ID de la fila: <strong>{i}</strong>
           </p>
         );
       }
       if (pageControl.devData[i]["percentage"] === "") {
         alerta.push(
-          <p>
+          <p key={'B'+i.toString()}>
             Verifique el valor del porcentaje de la fila: <strong>{i}</strong>
           </p>
         );
@@ -83,93 +74,169 @@ export default function ButtonAction() {
     return alerta;
   };
 
+  const onError = () => {
+    dispatch(setFeedback({
+      ...feedback, 
+      itShows: true, 
+      success: false,
+      children: [
+      <p key={'err'}>
+        Algo salió mal, es posible que exista un ingreso parcial de datos... antes de continuar 
+        comuníquese con el área de sistemas. Dele al botón de cerrar y copie toda la información en 
+        una hoja o realice pantallazos.
+        </p>]
+    }))
+  }
+
+  // new entry
+  const onSuccessNewTry = () => {
+    dispatch(setPageToRender({
+      ...pageControl, 
+      developmentStatus: 'NewTry', 
+      development:{...pageControl.development, paused: 0}
+    }))
+
+    const newState = {itShows: true, success: true, addNewRecord: true}
+    dispatch(setFeedback({...feedback, ...newState }))
+  }
+
+  // paused
+  const onSuccessPaused = () => {
+    dispatch(setPageToRender({
+      ...pageControl, 
+      developmentStatus: 'Paused'
+    }))
+
+    const newState = {itShows: true, success: true}
+    dispatch(setFeedback({...feedback, ...newState }))
+  }
+
+  // new entry
+  const addAttemptTime = useAskMutation({onError})
+  const updateNote = useAskMutation({enabled: !!addAttemptTime.data, onError})
+  const addAttempt = useMultipleMutation({enabled: !!updateNote.data, onError, onSuccess: onSuccessNewTry})
+
+  // paused
+  const addPausedAttemptTime = useAskMutation({onError})
+  const updatePausedNote = useAskMutation({enabled: !!addPausedAttemptTime.data, onError})
+  const addPausedAttempt = useMultipleMutation({enabled: !!updatePausedNote.data, onError, onSuccess: onSuccessPaused})
+
   const handleNewTry = () => {
     const alerta = checkingInputs("NewTry");
     if (alerta.length !== 0) {
       return dispatch(setFeedback({ itShows: true, children: alerta }));
     }
 
-    // mutation.mutate([POST_ATTEMPT_TIME, "post", { 
-    //   id_developmentrequest: pageControl.data.id_developmentrequest, 
-    //   attemps: pageControl.development.attemps, 
-    //   f_inicial: pageControl.development.f_inicial, 
-    //   f_final: new Date() 
-    // }]);
+    // adicionando el tiempo que demoro hacer el intento
+    let submitData = {
+      id_developmentrequest: pageControl.data.id_developmentrequest,
+      attemps: pageControl.development.attemps,
+      f_inicial: pageControl.development.f_inicial,
+      f_final: new Date()
+    }
+    addAttemptTime.mutate({url: POST_ATTEMPT_TIME, method: 'post', data: submitData})
 
-    // mutation.mutate([POST_ATTEMPT, "post", { 
-    //   id_developmentrequest: pageControl.data.id_developmentrequest, 
-    //   attemps: pageControl.development.attemps, 
-    //   f_inicial: pageControl.development.f_inicial, 
-    //   f_final: new Date() 
-    // }]);
+    // actualizando las nota que esta en la vista de varios
+    submitData = {
+      note: pageControl.development.note
+    }
+    updateNote.mutate({url: PUT_UPDATE_DEVELOPMENT + pageControl.data.id_developmentrequest, method: 'put', data: submitData})
 
-    // mutation.mutate({url: POST, method: 'post', data: {}})
-    // mutation.mutate({url: POST, method: 'post', data: {}})
-
-    // if (alerta.length === 0) {
-    //   //array with all data to POST and PUT
-    //   const arrayPOST = [];
-    //   const arrayPUT = [];
-    //   arrayPOST.push(addTime());
-    //   arrayPOST.push(addID("newTry"));
-    //   arrayPUT.push(updateNote());
-    //   MCRUD(arrayPOST, null, arrayPUT, null, null, setFeedBackNewTry);
-    // } else {
-    //   setFeedbackError(alerta);
-    //}
+    // adicionando cada id del intento mas otros datos
+    const idArray = []
+    for (let i = 0; i < pageControl.devData.length; i++) {
+      idArray.push(axiosInstance.post(POST_ATTEMPT,
+        {
+          id_developmentrequest: pageControl.data.id_developmentrequest,
+          id_user: user,
+          id_starpoint: pageControl.record.id_products,
+          base_resin: pageControl.development.base_resin,
+          dosing: pageControl.development.dosing,
+          scale: pageControl.development.scale,
+          attemps: pageControl.development.attemps,
+          paused: pageControl.development.paused > 0 ? pageControl.development.paused +1 : 0,
+          position:  i + 1,
+          material:  pageControl.devData[i].materialId,
+          percentage:  pageControl.devData[i].percentage
+      })) 
+    }
+    addAttempt.mutate({data: idArray})
   };
 
   //
   const handlePause = () => {
-    // const alerta = checkNewEntry();
-    // if (alerta.length === 0) {
-    //   //array with all data to POST and PUT
-    //   const arrayPOST = [];
-    //   const arrayPUT = [];
-    //   arrayPOST.push(addTime());
-    //   arrayPOST.push(addID("paused"));
-    //   arrayPUT.push(updateState());
-    //   arrayPUT.push(updateNote());
-    //   MCRUD(arrayPOST, null, arrayPUT, null, null, setFeedBackPause);
-    // } else {
-    //   setFeedbackError(alerta);
-    // }
+    const alerta = checkingInputs("NewTry");
+    if (alerta.length !== 0) {
+      return dispatch(setFeedback({ itShows: true, children: alerta }));
+    }
+
+    // adicionando el tiempo que demoro hacer el intento
+    let submitData = {
+      id_developmentrequest: pageControl.data.id_developmentrequest,
+      attemps: pageControl.development.attemps,
+      f_inicial: pageControl.development.f_inicial,
+      f_final: new Date()
+    }
+    addPausedAttemptTime.mutate({url: POST_ATTEMPT_TIME, method: 'post', data: submitData})
+
+    // actualizando las nota que esta en la vista de varios
+    submitData = {
+      note: pageControl.development.note
+    }
+    updatePausedNote.mutate({url: PUT_UPDATE_DEVELOPMENT + pageControl.data.id_developmentrequest, method: 'put', data: submitData})
+
+    // adicionando cada id del intento mas otros datos
+    const idArray = []
+    for (let i = 0; i < pageControl.devData.length; i++) {
+      idArray.push(axiosInstance.post(POST_ATTEMPT,
+        {
+          id_developmentrequest: pageControl.data.id_developmentrequest,
+          id_user: user,
+          id_starpoint: pageControl.record.id_products,
+          base_resin: pageControl.development.base_resin,
+          dosing: pageControl.development.dosing,
+          scale: pageControl.development.scale,
+          attemps: pageControl.development.attemps,
+          paused: pageControl.development.paused +1,
+          position:  i + 1,
+          material:  pageControl.devData[i].materialId,
+          percentage:  pageControl.devData[i].percentage
+      })) 
+    }
+    addPausedAttempt.mutate({data: idArray})
   };
 
   //
   const handleAproved = () => {
-    // const alerta = checkNewEntry("Aproved");
-    // if (alerta.length === 0) {
-    //   setFeedBackAproved(true);
-    // } else {
-    //   setFeedbackError(alerta);
-    // }
+    const alerta = checkingInputs("Aproved");
+    if (alerta.length !== 0) {
+      return dispatch(setFeedback({ itShows: true, children: alerta }));
+    }
+
+    dispatch(setPageToRender({...pageControl, developmentStatus: 'Aproved'}))
+
+    const newState = {itShows: true, success: undefined}
+    dispatch(setFeedback({...feedback, ...newState }))
   };
 
   return (
     <>
-      {feedbackComponent && (
-        <FeedbackComponent>
-          <>si</>
-        </FeedbackComponent>
-      )}
-
-      {mutationFeedback && (
-        <Feedback
-          mutationFeedback={mutationFeedback}
-          setMutationFeedback={setMutationFeedback}
-        />
-      )}
-
-      {mutation.isLoading || (mutation.isFetching && <Loader />)}
-
-      {!mutationFeedback && <></>}
+      {
+      addAttemptTime.isLoading || addAttemptTime.isFetching ||
+      updateNote.isLoading || updateNote.isFetching ||
+      addAttempt.isLoading || addAttempt.isFetching && 
+      <Loader />
+      }
 
       <div onClick={() => handleNewTry()} className="row m-5">
         <button
           type="button"
           className="btn btn-primary"
-          disabled={mutation.isFetching}
+          disabled={
+            addAttemptTime.isFetching ||
+            updateNote.isFetching ||
+            addAttempt.isFetching
+          }
         >
           Nuevo intento
         </button>
@@ -178,7 +245,11 @@ export default function ButtonAction() {
         <button
           type="button"
           className="btn btn-warning"
-          disabled={mutation.isFetching}
+          disabled={
+            addAttemptTime.isFetching ||
+            updateNote.isFetching ||
+            addAttempt.isFetching
+          }
         >
           Pausar desarrollo
         </button>
@@ -187,7 +258,11 @@ export default function ButtonAction() {
         <button
           type="button"
           className="btn btn-success"
-          disabled={mutation.isFetching}
+          disabled={
+            addAttemptTime.isFetching ||
+            updateNote.isFetching ||
+            addAttempt.isFetching
+          }
         >
           Desarrollo Aprobado
         </button>

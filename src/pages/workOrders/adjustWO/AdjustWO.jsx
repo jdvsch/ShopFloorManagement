@@ -22,6 +22,7 @@ export default function AdjustWO() {
   React.useEffect(() => {
     pageControl.page !== "AjustarOT" &&
       dispatch(setPageToRender({ page: "AjustarOT", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

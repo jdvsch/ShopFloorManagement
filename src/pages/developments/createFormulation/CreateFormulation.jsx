@@ -13,7 +13,6 @@ import Submenu from "../commonSubcomponents/submenu/Submenu";
 import TableDevelopment from "../commonSubcomponents/tableDevelopment/TableDevelopment";
 import Worksheet from "../../workOrders/commonSubcomponents/Worksheet";
 
-
 export default function CreateFormulation() {
     const dispatch = useDispatch();
     const pageControl = useSelector(
@@ -23,14 +22,16 @@ export default function CreateFormulation() {
     React.useEffect(() => {
       pageControl.page !== "crearFormulacion" &&
         dispatch(setPageToRender({ page: "crearFormulacion", data: [], subpage:'table' }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
     React.useEffect(() => {
       if (pageControl.subpage === 'Ver OT' && pageControl.development.id_productDevelopment === '') {
         mutation.mutate({url: PUT_UPDATE_WO + pageControl.data.id_developmentrequest, method: 'put', data: { id_states: 2 }})
-        mutation.mutate({url: POST_PRODUCT_DEVELOPMENT, method: 'put', data: {id_developmentrequest: pageControl.data.id_developmentrequest}})
+        mutation.mutate({url: POST_PRODUCT_DEVELOPMENT, method: 'post', data: {id_developmentrequest: pageControl.data.id_developmentrequest}})
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageControl]);
 
     const onError = () => {

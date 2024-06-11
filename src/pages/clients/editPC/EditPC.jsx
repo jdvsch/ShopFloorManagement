@@ -22,6 +22,7 @@ export default function EditPC() {
   React.useEffect(() => {
     pageControl.page !== "editarCP" &&
       dispatch(setPageToRender({ page: "editarCP", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

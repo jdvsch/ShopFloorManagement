@@ -7,6 +7,7 @@ import Filter from '../columsFilter/Filter'
 import { setPageToRender } from '../../../redux/slices/pageToRenderSlice'
 import "./styles.css"
 
+// eslint-disable-next-line react/prop-types
 export default function Table ({ table, meneOption }) {
   const dispatch = useDispatch()
   const pageControl = useSelector(
@@ -17,7 +18,7 @@ export default function Table ({ table, meneOption }) {
       return dispatch(setPageToRender({record: cellData.row.original}))
     }
 
-    if (cellData.column.id !== 'select' && (pageControl.page === 'crearFormulacion' || pageControl.page === 'crearFormulacion')) {
+    if (cellData.column.id !== 'select' && (pageControl.page === 'crearFormulacion' || pageControl.page === 'resumeFormulacion')) {
       return dispatch(setPageToRender({data: cellData.row.original, subpage: 'Ver OT', development: {...pageControl.development, f_inicial: new Date()}}))
     } else {
       return dispatch(setPageToRender({data: cellData.row.original}))

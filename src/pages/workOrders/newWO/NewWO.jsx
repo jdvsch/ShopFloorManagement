@@ -22,6 +22,7 @@ export default function NewWO() {
   React.useEffect(() => {
     pageControl.page !== "NuevaOT" &&
       dispatch(setPageToRender({ page: "NuevaOT", data: [] }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
